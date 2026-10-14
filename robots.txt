@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blixemgolf.co.za/sitemap.xml
