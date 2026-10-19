@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BliXem · 19th Hole Boxing Co.</title>
-<meta name="description" content="BliXem: a punch ball that clamps onto your golf cart's roof post. Bad shot? Take it out on the bag, not your fourball. Launch price R849.">
+<meta name="description" content="BliXem: a punch ball that clamps onto your golf cart's roof post. Personalise it with a name, a face or your logo. Bulk pricing for golf days, pro shops and golf courses. Launch price R849.">
 <link rel="canonical" href="https://blixemgolf.co.za/">
 <meta name="theme-color" content="#2c5a41">
 <meta property="og:type" content="website">
@@ -30,7 +30,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&family=Shrikhand&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <!--
   BliXem landing page. One file, no build step.
-  The form does NOT send anything yet. To connect it, set FORM_ENDPOINT in the script at the bottom.
+  Both forms (notify me + bulk quote) post to one Google Form, whose answers land in the
+  "BliXem sign-ups (Responses)" Google Sheet. The form URL and field IDs are in the script at the bottom.
 -->
 <style>
   :root {
@@ -38,6 +39,7 @@
     --deep: #1f4430;
     --cream: #f3ecdc;
     --cream-2: #e9dfc8;
+    --paper: #fbf7ee;
     --orange: #d2602a;
     --orange-dark: #b44e1f;
     --rust: #a8481c;       /* darker orange for small text and buttons, so cream/white text stays readable */
@@ -105,9 +107,11 @@
   }
   .btn:hover { background: var(--rust-dark); }
   .btn:active { transform: translateY(1px); }
+  .btn[disabled] { opacity: .6; cursor: wait; }
   :focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; }
   .hero :focus-visible, .who :focus-visible { outline-color: var(--gold); }
   .corporate :focus-visible { outline-color: var(--cream); }
+  .corporate .form-card :focus-visible, .corporate .price-card :focus-visible { outline-color: var(--deep); }
   .btn.ghost { background: transparent; color: var(--cream); box-shadow: inset 0 0 0 2px var(--cream); }
   .btn.ghost:hover { background: rgba(243,236,220,.12); }
 
@@ -124,11 +128,13 @@
     border: 2px dashed rgba(233,178,58,.7); border-radius: 999px; color: #f2c65e;
   }
   .price-chip strong { font-family: var(--display); font-weight: 400; font-size: 1.4rem; color: var(--cream); letter-spacing: 0; }
+  .hero .bulk-link { display: block; margin-top: 18px; color: #e4ddca; font-size: 0.98rem; }
+  .hero .bulk-link a { color: var(--gold); font-weight: 600; }
 
   /* How it works */
   .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; grid-template-columns: repeat(3, 1fr); }
-  .step { background: #fbf7ee; border: 2px solid var(--cream-2); border-radius: var(--radius); padding: 28px 24px 22px; position: relative; }
-  .step .num {
+  .step { background: var(--paper); border: 2px solid var(--cream-2); border-radius: var(--radius); padding: 28px 24px 22px; position: relative; }
+  .step .num, .make .icon {
     width: 52px; height: 52px; border-radius: 50%;
     background: var(--orange); color: var(--cream);
     font-family: var(--display); font-size: 1.6rem; line-height: 52px; text-align: center;
@@ -148,6 +154,50 @@
   .card { border: 2px solid rgba(243,236,220,.22); border-radius: var(--radius); padding: 24px 20px; }
   .card .label { color: var(--gold); font-size: 0.72rem; display: block; margin-bottom: 8px; }
   .card p { margin: 0; color: #dcd5c2; font-size: 0.98rem; }
+  .card p a { color: var(--gold); }
+
+  /* Make it yours */
+  .make { background: var(--cream-2); }
+  .make-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .make-card { background: var(--paper); border-radius: var(--radius); padding: 26px 22px 22px; box-shadow: 0 6px 0 rgba(31,68,48,.12); }
+  .make .icon { display: flex; align-items: center; justify-content: center; }
+  .make .icon svg { width: 28px; height: 28px; }
+  .make-card:nth-child(2) .icon { background: var(--gold); color: var(--deep); }
+  .make-card:nth-child(3) .icon { background: var(--fairway); }
+  .make-card:nth-child(4) .icon { background: var(--deep); }
+  .make-card p { margin: 0; font-size: 0.98rem; }
+  .make-card .where { display: block; font-size: 0.7rem; color: var(--rust); margin-bottom: 6px; }
+  .make-foot { max-width: 680px; margin: 30px auto 0; text-align: center; }
+  .make-foot p { margin: 0 0 8px; }
+  .make-foot .fine { font-size: 0.9rem; color: #5a5a4e; }
+
+  /* Forms (shared) */
+  .form-card { background: var(--paper); color: var(--ink); border: 2px solid var(--cream-2); border-radius: 18px; padding: 30px 26px; box-shadow: 0 10px 0 var(--fairway); }
+  .field { margin-bottom: 16px; }
+  .field > label, .field > .label { display: block; margin-bottom: 6px; color: var(--deep); font-size: 0.75rem; }
+  .field .opt { color: #6b6b5e; letter-spacing: 0.08em; text-transform: none; font-family: var(--body); font-weight: 500; font-size: 0.85rem; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date], select, textarea {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--ink);
+    background: #fff; border: 2px solid #cfc4aa; border-radius: 10px; padding: 12px 14px;
+  }
+  select { appearance: none; -webkit-appearance: none; padding-right: 40px; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%231f4430' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; }
+  textarea { min-height: 96px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { border-color: var(--fairway); outline: none; box-shadow: 0 0 0 3px rgba(44,90,65,.2); }
+  [aria-invalid=true] { border-color: var(--orange) !important; }
+  .check { display: flex; gap: 12px; align-items: flex-start; margin: 6px 0 18px; font-weight: 500; cursor: pointer; }
+  .check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--orange); flex: none; }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; border: 0; padding: 0; margin: 0 0 16px; }
+  .checks legend { padding: 0; margin-bottom: 8px; color: var(--deep); font-size: 0.75rem; }
+  .checks .check { margin: 4px 0; font-size: 0.97rem; }
+  .error { color: var(--orange-dark); font-size: 0.9rem; margin-top: 6px; }
+  .form-card .btn { width: 100%; font-size: 1rem; }
+  .popia { font-size: 0.88rem; color: #5a5a4e; margin: 14px 0 0; }
+  .thanks { text-align: center; padding: 18px 4px; }
+  .thanks .big { font-family: var(--display); font-size: 2rem; color: var(--deep); margin-bottom: 8px; }
+  .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
   /* Notify / pre-order */
   .notify-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; }
@@ -157,37 +207,27 @@
   .price-box .launch-tag { display: inline-block; background: var(--rust); color: var(--cream); padding: 5px 12px 3px; border-radius: 6px; font-size: 0.72rem; }
   .price-box ul { padding-left: 1.1em; margin: 20px 0 0; }
   .price-box li { margin-bottom: 6px; }
-  .form-card { background: #fbf7ee; border: 2px solid var(--cream-2); border-radius: 18px; padding: 30px 26px; box-shadow: 0 10px 0 var(--fairway); }
-  .field { margin-bottom: 16px; }
-  .field label { display: block; margin-bottom: 6px; color: var(--deep); font-size: 0.75rem; }
-  .field label .opt { color: #6b6b5e; letter-spacing: 0.08em; text-transform: none; font-family: var(--body); font-weight: 500; font-size: 0.85rem; }
-  input[type=text], input[type=email], input[type=tel] {
-    width: 100%; font: inherit; font-size: 1rem; color: var(--ink);
-    background: #fff; border: 2px solid #cfc4aa; border-radius: 10px; padding: 12px 14px;
-  }
-  input[type=text]:focus, input[type=email]:focus, input[type=tel]:focus { border-color: var(--fairway); outline: none; box-shadow: 0 0 0 3px rgba(44,90,65,.2); }
-  input[aria-invalid=true] { border-color: var(--orange); }
-  .check { display: flex; gap: 12px; align-items: flex-start; margin: 6px 0 18px; font-weight: 500; cursor: pointer; }
-  .check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--orange); flex: none; }
-  .error { color: var(--orange-dark); font-size: 0.9rem; margin-top: 6px; }
-  .form-card .btn { width: 100%; font-size: 1rem; }
-  .popia { font-size: 0.88rem; color: #5a5a4e; margin: 14px 0 0; }
-  .thanks { text-align: center; padding: 18px 4px; }
-  .thanks .big { font-family: var(--display); font-size: 2rem; color: var(--deep); margin-bottom: 8px; }
-  #golfday-field[hidden] { display: none; }
 
-  /* Corporate */
+  /* Corporate, golf courses and pro shops */
   .corporate { background: var(--rust); color: var(--cream); }
-  .corp-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
-  .corporate h2 { color: var(--cream); }
-  .corporate .label { color: var(--cream); }
-  .corporate p { font-size: 1.08rem; margin-top: 16px; }
-  .corporate ul { margin: 0; padding: 0; list-style: none; }
-  .corporate li { padding: 14px 0; border-bottom: 2px dashed rgba(243,236,220,.45); font-weight: 500; }
-  .corporate li:last-child { border-bottom: 0; }
-  .corporate li b { font-family: var(--label); letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.78rem; display: block; color: var(--cream); }
-  .corporate .btn { background: var(--deep); margin-top: 10px; }
-  .corporate .btn:hover { background: #163323; }
+  .corporate h2, .corporate h3 { color: var(--cream); }
+  .corporate .section-head .label { color: var(--cream); }
+  .corporate .card { border-color: rgba(243,236,220,.45); }
+  .corporate .card .label { color: var(--gold); }
+  .corporate .card p { color: var(--cream); }
+  .corp-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; margin-top: 44px; }
+  .price-card { background: var(--cream); color: var(--ink); border-radius: 18px; padding: 28px 26px; }
+  .price-card h3 { color: var(--deep); font-size: 1.3rem; margin-bottom: 14px; }
+  .tiers { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .tiers caption { text-align: left; }
+  .tiers th, .tiers td { padding: 11px 4px; border-bottom: 2px dashed var(--cream-2); text-align: left; }
+  .tiers thead th { font-family: var(--label); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.72rem; color: var(--rust); border-bottom: 2px solid var(--cream-2); }
+  .tiers td:last-child, .tiers th:last-child { text-align: right; }
+  .tiers td b { font-family: var(--display); font-weight: 400; font-size: 1.3rem; color: var(--deep); }
+  .tiers .from { font-size: 0.85rem; color: #5a5a4e; margin-right: 4px; }
+  .price-card ul { margin: 0 0 14px; padding-left: 1.1em; }
+  .price-card li { margin-bottom: 6px; }
+  .price-card .fine { font-size: 0.9rem; color: #5a5a4e; margin: 0; }
 
   /* FAQ */
   .faq { max-width: 760px; margin: 0 auto; }
@@ -213,7 +253,7 @@
 
   /* Responsive */
   @media (max-width: 900px) {
-    .cards { grid-template-columns: repeat(2, 1fr); }
+    .cards, .make-grid { grid-template-columns: repeat(2, 1fr); }
     .notify-grid, .corp-grid { grid-template-columns: 1fr; gap: 28px; }
   }
   @media (max-width: 720px) {
@@ -222,9 +262,9 @@
   }
   @media (max-width: 520px) {
     .wrap { padding-inline: 16px; }
-    .cards { grid-template-columns: 1fr; }
+    .cards, .make-grid, .row, .checks { grid-template-columns: 1fr; }
     .hero .ctas .btn { width: 100%; }
-    .form-card { padding: 24px 18px; }
+    .form-card, .price-card { padding: 24px 18px; }
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 </style>
@@ -241,6 +281,7 @@
       <a class="btn ghost" href="#how">How it works</a>
     </div>
     <div class="price-chip label">Launch price <strong>R849</strong></div>
+    <p class="bulk-link">Golf day, pro shop or golf course? <a href="#bulk">See bulk pricing</a></p>
   </div>
 </header>
 <div class="stripes" aria-hidden="true"></div>
@@ -283,17 +324,17 @@
         <div class="card">
           <span class="label">Gifts</span>
           <h3>The golfer who has everything</h3>
-          <p>They have the balls, the tees and the gloves. They don't have this.</p>
+          <p>They have the balls, the tees and the gloves. They don't have this, with their name on it.</p>
         </div>
         <div class="card">
           <span class="label">Sun 20 June 2027</span>
           <h3>Father's Day</h3>
-          <p>A gift Dad will actually use, every round. First batch lands before Father's Day.</p>
+          <p>A gift Dad will actually use, every round. We're aiming to land the first batch before Father's Day.</p>
         </div>
         <div class="card">
           <span class="label">Business</span>
-          <h3>Corporate golf days</h3>
-          <p>Hole prizes and goodie bags that people talk about at the 19th hole. Ask us about adding your logo.</p>
+          <h3>Golf days and clubs</h3>
+          <p>Hole prizes, goodie bags and pro-shop stock, with your logo on the ball. <a href="#bulk">See bulk pricing</a>.</p>
         </div>
         <div class="card">
           <span class="label">At home</span>
@@ -305,66 +346,219 @@
   </section>
   <div class="stripes thin" aria-hidden="true"></div>
 
+  <section class="make" id="customise">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Make it yours</span>
+        <h2>Put a name, a face or a logo on it</h2>
+        <p>Every BliXem can be personalised. Pick one, or go all out.</p>
+      </div>
+      <div class="make-grid">
+        <div class="make-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4" stroke-linecap="round"/></svg></div>
+          <span class="where label">On the ball</span>
+          <h3>Your logo</h3>
+          <p>Company, club or sponsor logo. Made for golf days, hole prizes and the pro shop.</p>
+        </div>
+        <div class="make-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19l5-14 5 14M6 14h6"/><path d="M15 19v-7m0 2.5c.8-1.6 2.2-2.5 4-2.5"/></svg></div>
+          <span class="where label">On the ball</span>
+          <h3>A name</h3>
+          <p>"Property of Jannie." "Dad's. Hands off." Their name, their bag.</p>
+        </div>
+        <div class="make-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 9.5v.5M15 9.5v.5"/><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2"/></svg></div>
+          <span class="where label">On the bag, full colour</span>
+          <h3>A face, or something funny</h3>
+          <p>The groom on his bachelor's day. The oke who never buys a round. Your own design.</p>
+        </div>
+        <div class="make-card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4"/><path d="M5 12v8h14v-8M12 8v12"/><path d="M12 8c-1.5-3.5-5.5-3.5-5-1 .4 1.6 5 1 5 1zm0 0c1.5-3.5 5.5-3.5 5-1-.4 1.6-5 1-5 1z"/></svg></div>
+          <span class="where label">On the box</span>
+          <h3>A gift message</h3>
+          <p>Your own words on the gift box. For Father's Day, birthdays and "sorry about the 7-iron".</p>
+        </div>
+      </div>
+      <div class="make-foot">
+        <p>Personalised BliXems are made to order. Prices come out at launch, so tell us what you'd like when you sign up and you'll hear first.</p>
+        <p class="fine">We only print someone's face with their OK, and we can say no to anything hurtful or rude.</p>
+      </div>
+    </div>
+  </section>
+
   <section id="notify">
     <div class="wrap notify-grid">
       <div class="price-box">
         <span class="label">Pre-order</span>
         <div class="price-big">R849</div>
         <span class="launch-tag label">Launch price</span>
-        <p style="margin-top:18px">We're getting the first batch ready now. Leave your details and we'll tell you the moment BliXem is ready to order.</p>
+        <p style="margin-top:18px">BliXem launches in 2027. Leave your details and we'll tell you the moment it's ready to order.</p>
         <ul>
           <li>Delivered anywhere in South Africa</li>
-          <li>First batch before Father's Day 2027</li>
+          <li>Planned for before Father's Day 2027</li>
           <li>No payment now. Signing up doesn't commit you to anything.</li>
         </ul>
       </div>
 
       <div class="form-card">
-        <!-- Sign-ups are sent to FORM_ENDPOINT (set in the script at the bottom). While it is empty, the form asks people to email instead. -->
         <form id="notify-form" novalidate>
           <div class="field">
-            <label class="label" for="name">Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" required>
-            <div class="error" id="name-error" hidden>Please add your name.</div>
+            <label class="label" for="n-name">Name</label>
+            <input type="text" id="n-name" name="name" autocomplete="name" maxlength="120" required>
+            <div class="error" id="n-name-error" hidden>Please add your name.</div>
           </div>
           <div class="field">
-            <label class="label" for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
-            <div class="error" id="email-error" hidden>Please check your email address.</div>
+            <label class="label" for="n-email">Email</label>
+            <input type="email" id="n-email" name="email" autocomplete="email" inputmode="email" maxlength="200" required>
+            <div class="error" id="n-email-error" hidden>Please check your email address.</div>
           </div>
           <div class="field">
-            <label class="label" for="whatsapp">WhatsApp <span class="opt">(optional)</span></label>
-            <input type="tel" id="whatsapp" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="e.g. 082 123 4567">
+            <label class="label" for="n-phone">WhatsApp <span class="opt">(optional)</span></label>
+            <input type="tel" id="n-phone" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" placeholder="e.g. 082 123 4567">
           </div>
-          <div class="field" id="golfday-field" hidden>
-            <label class="label" for="company">Company or golf day <span class="opt">(optional)</span></label>
-            <input type="text" id="company" name="company" autocomplete="organization" placeholder="e.g. Company name, date, number of players">
+          <div class="field">
+            <label class="label" for="n-personalise">Personalise it? <span class="opt">(optional)</span></label>
+            <select id="n-personalise" name="personalise">
+              <option value="">Not sure yet</option>
+              <option>A name on the ball</option>
+              <option>A face or funny print on the bag</option>
+              <option>A gift box message</option>
+              <option>Show me all the options</option>
+            </select>
           </div>
-          <label class="check"><input type="checkbox" id="preorder" name="preorder" value="yes"> I'd like to pre-order</label>
+          <div class="hp" aria-hidden="true"><label for="n-website">Website</label><input type="text" id="n-website" name="website" tabindex="-1" autocomplete="off"></div>
+          <label class="check"><input type="checkbox" id="n-preorder" name="preorder" value="Yes"> I'd like to pre-order</label>
           <button class="btn" type="submit">Notify me</button>
           <p class="popia">We'll only use this to tell you when BliXem is ready. Unsubscribe anytime. <a href="privacy.html">Privacy</a></p>
         </form>
-        <div class="thanks" id="thanks" hidden tabindex="-1">
+        <div class="thanks" id="notify-thanks" hidden tabindex="-1">
           <div class="big">Lekker, thank you!</div>
-          <p id="thanks-msg">You're on the list. We'll let you know as soon as BliXem is ready.</p>
+          <p class="thanks-msg">You're on the list. We'll let you know as soon as BliXem is ready.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="corporate" id="golf-days">
-    <div class="wrap corp-grid">
-      <div>
-        <span class="label">Corporate golf days</span>
-        <h2>Ask about branded BliXems for your golf day</h2>
-        <p>A hole prize or goodie-bag gift that gets used long after the prize-giving. Ask us about putting your logo on the bag everyone punches.</p>
-        <a class="btn" href="#notify" id="golfday-btn">Ask about golf days</a>
+  <section class="corporate" id="bulk">
+    <div class="wrap">
+      <div class="section-head" id="golf-days">
+        <span class="label">Bulk and trade</span>
+        <h2>Golf days, pro shops and golf courses</h2>
+        <p>Buy 10 or more and the price drops. Add your logo and make it the prize everyone talks about at the 19th.</p>
       </div>
-      <ul>
-        <li><b>Hole prizes</b>Longest drive, nearest the pin, or the best meltdown.</li>
-        <li><b>Goodie bags</b>One for every player in the field.</li>
-        <li><b>Your branding</b>Ask about your company logo on the ball.</li>
-      </ul>
+      <div class="cards">
+        <div class="card">
+          <span class="label">Golf days</span>
+          <h3>Companies and charity days</h3>
+          <p>Hole prizes, goodie bags and a "worst shot of the day" prize people actually want.</p>
+        </div>
+        <div class="card">
+          <span class="label">Pro shops</span>
+          <h3>Stock it at the till</h3>
+          <p>The gift golfers buy on the way to the first tee. Trade pricing for resellers.</p>
+        </div>
+        <div class="card">
+          <span class="label">Hire carts</span>
+          <h3>One on every cart</h3>
+          <p>Fit a BliXem to your hire fleet, with your club's crest on the ball. It clamps on and comes off in seconds.</p>
+        </div>
+        <div class="card">
+          <span class="label">Estates and clubs</span>
+          <h3>Prizes and members</h3>
+          <p>Club competitions, league days and member gifts, in your club's colours.</p>
+        </div>
+      </div>
+
+      <div class="corp-grid">
+        <div class="price-card">
+          <h3>Bulk prices per bag</h3>
+          <table class="tiers">
+            <caption class="hp">Bulk prices per bag, excluding VAT</caption>
+            <thead><tr><th scope="col">How many</th><th scope="col">Per bag, ex VAT</th></tr></thead>
+            <tbody>
+              <tr><td>10 – 24</td><td><span class="from">from</span><b>R650</b></td></tr>
+              <tr><td>25 – 49</td><td><span class="from">from</span><b>R595</b></td></tr>
+              <tr><td>50 – 99</td><td><span class="from">from</span><b>R560</b></td></tr>
+              <tr><td>100 or more</td><td><span class="from">from</span><b>R520</b></td></tr>
+            </tbody>
+          </table>
+          <ul>
+            <li><b>Logos, names and prints:</b> priced with your quote.</li>
+            <li><b>Pro shops and hire-cart fleets:</b> ask us for trade pricing.</li>
+            <li><b>Need it for a date?</b> Tell us. Personalised orders take longer, so ask early.</li>
+          </ul>
+          <p class="fine">Launch prices. Every order gets a written quote before anything is final.</p>
+        </div>
+
+        <div class="form-card">
+          <form id="quote-form" novalidate>
+            <div class="row">
+              <div class="field">
+                <label class="label" for="q-name">Your name</label>
+                <input type="text" id="q-name" name="name" autocomplete="name" maxlength="120" required>
+                <div class="error" id="q-name-error" hidden>Please add your name.</div>
+              </div>
+              <div class="field">
+                <label class="label" for="q-company">Company or club</label>
+                <input type="text" id="q-company" name="company" autocomplete="organization" maxlength="160" required>
+                <div class="error" id="q-company-error" hidden>Please add your company or club.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label class="label" for="q-email">Email</label>
+                <input type="email" id="q-email" name="email" autocomplete="email" inputmode="email" maxlength="200" required>
+                <div class="error" id="q-email-error" hidden>Please check your email address.</div>
+              </div>
+              <div class="field">
+                <label class="label" for="q-phone">Phone <span class="opt">(optional)</span></label>
+                <input type="tel" id="q-phone" name="phone" autocomplete="tel" inputmode="tel" maxlength="40">
+              </div>
+            </div>
+            <div class="field">
+              <label class="label" for="q-buyer">I'm buying for</label>
+              <select id="q-buyer" name="buyer" required>
+                <option value="">Choose one</option>
+                <option>A golf day or company gifts</option>
+                <option>A pro shop (to resell)</option>
+                <option>Golf course hire carts</option>
+                <option>An estate or club (prizes, events)</option>
+                <option>Something else</option>
+              </select>
+              <div class="error" id="q-buyer-error" hidden>Please choose one.</div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label class="label" for="q-qty">How many bags</label>
+                <input type="number" id="q-qty" name="qty" min="1" max="100000" inputmode="numeric" placeholder="e.g. 40" required>
+                <div class="error" id="q-qty-error" hidden>Please add a number.</div>
+              </div>
+              <div class="field">
+                <label class="label" for="q-date">Date needed <span class="opt">(optional)</span></label>
+                <input type="date" id="q-date" name="date">
+              </div>
+            </div>
+            <fieldset class="checks">
+              <legend class="label">Personalise <span class="opt">(optional)</span></legend>
+              <label class="check"><input type="checkbox" name="custom" value="Logo on the ball"> Logo on the ball</label>
+              <label class="check"><input type="checkbox" name="custom" value="Names on the ball"> Names on the ball</label>
+              <label class="check"><input type="checkbox" name="custom" value="Face or funny print on the bag"> Face or funny print</label>
+              <label class="check"><input type="checkbox" name="custom" value="Gift box message"> Gift box message</label>
+            </fieldset>
+            <div class="field">
+              <label class="label" for="q-message">Anything else? <span class="opt">(optional)</span></label>
+              <textarea id="q-message" name="message" maxlength="2000" placeholder="e.g. Charity golf day, 18 March, 30 fourballs"></textarea>
+            </div>
+            <div class="hp" aria-hidden="true"><label for="q-website">Website</label><input type="text" id="q-website" name="website" tabindex="-1" autocomplete="off"></div>
+            <button class="btn" type="submit">Get a quote</button>
+            <p class="popia">We'll only use this to reply about your order. <a href="privacy.html">Privacy</a></p>
+          </form>
+          <div class="thanks" id="quote-thanks" hidden tabindex="-1">
+            <div class="big">Sharp, thank you!</div>
+            <p class="thanks-msg">We'll be in touch with a written quote.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -384,12 +578,24 @@
           <p>Only use BliXem when the cart is parked. Never while driving, and keep it clear of passengers getting in and out.</p>
         </details>
         <details>
+          <summary>Can I put a name, a face or my logo on it?</summary>
+          <p>Yes. Names and logos go on the ball, faces and funny designs are printed in full colour on the bag, and you can add a message on the gift box. Personalised BliXems are made to order. We only print someone's face with their OK.</p>
+        </details>
+        <details>
+          <summary>Do you do bulk or trade prices?</summary>
+          <p>Yes. Bulk prices start at 10 bags, and pro shops and golf courses can ask for trade pricing. <a href="#bulk">Ask for a quote</a>.</p>
+        </details>
+        <details>
+          <summary>Can a golf course fit one to every hire cart?</summary>
+          <p>Yes, that's what it's made for. It clamps on by hand and comes off in seconds. Ask us about fleet pricing and your club's crest on the ball.</p>
+        </details>
+        <details>
           <summary>Do you deliver to my area?</summary>
           <p>Yes. We deliver anywhere in South Africa.</p>
         </details>
         <details>
           <summary>When can I get one?</summary>
-          <p>The first batch will be ready before Father's Day 2027 (Sunday 20 June). Sign up above and we'll tell you as soon as you can order.</p>
+          <p>We're planning the first batch for before Father's Day 2027 (Sunday 20 June). Sign up above and we'll tell you as soon as you can order.</p>
         </details>
         <details>
           <summary>How much is it?</summary>
@@ -417,55 +623,134 @@
 
 <script>
   (function () {
-    // Where sign-ups are sent (e.g. a Zoho Forms submit URL). Empty = not connected yet.
-    var FORM_ENDPOINT = '';
+    // Both forms post to one Google Form ("BliXem sign-ups"), which saves each answer as a row
+    // in the "BliXem sign-ups (Responses)" Google Sheet. Field IDs come from the published form.
+    var GOOGLE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSc09Pw7dW6A4TMJtQwUVAFMTtNds9fybEeRw9x5WylNMjFFpw/formResponse';
+    var FIELDS = {
+      type: 'entry.427950468',
+      name: 'entry.86377772',
+      email: 'entry.1394324245',
+      phone: 'entry.694917502',
+      company: 'entry.1244578359',
+      buyer: 'entry.1996535585',
+      qty: 'entry.857824002',
+      date: 'entry.1544832048',
+      preorder: 'entry.1232224607',
+      personalise: 'entry.481361053',
+      message: 'entry.725478162'
+    };
     var CONTACT_EMAIL = 'hello@blixemgolf.co.za';
-    var form = document.getElementById('notify-form');
-    var thanks = document.getElementById('thanks');
-    var golfField = document.getElementById('golfday-field');
-    var golfBtn = document.getElementById('golfday-btn');
+    var EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     var yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-    // "Ask about golf days" shows the optional company field.
-    golfBtn.addEventListener('click', function () {
-      golfField.hidden = false;
-      setTimeout(function () { document.getElementById('name').focus({ preventScroll: true }); }, 400);
-    });
-
-    function showError(input, errorId, show) {
-      document.getElementById(errorId).hidden = !show;
-      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+    function send(values) {
+      var body = new URLSearchParams();
+      Object.keys(values).forEach(function (key) {
+        if (values[key]) body.append(FIELDS[key], values[key]);
+      });
+      // Google doesn't allow reading the reply from another site, so a sent request counts as saved.
+      return fetch(GOOGLE_FORM, { method: 'POST', mode: 'no-cors', body: body });
     }
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var name = form.name.value.trim();
-      var email = form.email.value.trim();
-      var nameBad = name.length < 1;
-      var emailBad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      showError(form.name, 'name-error', nameBad);
-      showError(form.email, 'email-error', emailBad);
-      if (nameBad) { form.name.focus(); return; }
-      if (emailBad) { form.email.focus(); return; }
+    // Shows or hides one field's error. Returns true when the field is bad.
+    function check(input, bad) {
+      document.getElementById(input.id + '-error').hidden = !bad;
+      input.setAttribute('aria-invalid', bad ? 'true' : 'false');
+      return bad;
+    }
 
-      if (!FORM_ENDPOINT) {
-        document.getElementById('thanks-msg').innerHTML = 'Sign-ups open very soon. For now, email us at <strong>' + CONTACT_EMAIL + '</strong> and we’ll add you to the list.';
-        document.querySelector('#thanks .big').textContent = 'Almost there!';
-        form.hidden = true; thanks.hidden = false; thanks.focus();
-        return;
-      }
-      var data = new URLSearchParams(new FormData(form));
-      fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: data }).catch(function () {});
-      var firstName = name.split(/\s+/)[0];
-      var msg = 'You’re on the list, ' + firstName + '. We’ll let you know as soon as BliXem is ready.';
-      if (form.preorder.checked) msg += ' We’ve noted that you’d like to pre-order at the R849 launch price.';
-      if (form.company.value.trim()) msg += ' We’ll be in touch about your golf day.';
-      document.getElementById('thanks-msg').textContent = msg;
+    function finish(form, thanksId, msg) {
+      var thanks = document.getElementById(thanksId);
+      if (msg) thanks.querySelector('.thanks-msg').textContent = msg;
       form.hidden = true;
       thanks.hidden = false;
       thanks.focus();
-    });
+    }
+
+    function failed(form, button) {
+      button.disabled = false;
+      var p = form.querySelector('.send-error') || document.createElement('p');
+      p.className = 'error send-error';
+      p.textContent = 'Sorry, that didn’t go through. Please try again, or email us at ' + CONTACT_EMAIL + '.';
+      button.insertAdjacentElement('afterend', p);
+    }
+
+    function wire(form, validate, collect, thanksId, thanksMsg) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var firstBad = validate(form);
+        if (firstBad) { firstBad.focus(); return; }
+        var button = form.querySelector('button[type=submit]');
+        // Bots fill the hidden "website" field; pretend it worked and send nothing.
+        if (form.website.value) { finish(form, thanksId, thanksMsg(form)); return; }
+        button.disabled = true;
+        send(collect(form))
+          .then(function () { finish(form, thanksId, thanksMsg(form)); })
+          .catch(function () { failed(form, button); });
+      });
+    }
+
+    function firstName(form) { return form.name.value.trim().split(/\s+/)[0]; }
+
+    wire(document.getElementById('notify-form'),
+      function (f) {
+        var bad = [
+          check(f.name, f.name.value.trim().length < 1) && f.name,
+          check(f.email, !EMAIL_OK.test(f.email.value.trim())) && f.email
+        ];
+        return bad.filter(Boolean)[0];
+      },
+      function (f) {
+        return {
+          type: 'Notify me',
+          name: f.name.value.trim(),
+          email: f.email.value.trim(),
+          phone: f.phone.value.trim(),
+          personalise: f.personalise.value,
+          preorder: f.preorder.checked ? 'Yes' : ''
+        };
+      },
+      'notify-thanks',
+      function (f) {
+        var msg = 'You’re on the list, ' + firstName(f) + '. We’ll let you know as soon as BliXem is ready.';
+        if (f.preorder.checked) msg += ' We’ve noted that you’d like to pre-order at the R849 launch price.';
+        return msg;
+      });
+
+    wire(document.getElementById('quote-form'),
+      function (f) {
+        var qty = parseInt(f.qty.value, 10);
+        var bad = [
+          check(f.name, f.name.value.trim().length < 1) && f.name,
+          check(f.company, f.company.value.trim().length < 1) && f.company,
+          check(f.email, !EMAIL_OK.test(f.email.value.trim())) && f.email,
+          check(f.buyer, !f.buyer.value) && f.buyer,
+          check(f.qty, !(qty >= 1)) && f.qty
+        ];
+        return bad.filter(Boolean)[0];
+      },
+      function (f) {
+        var custom = Array.prototype.slice.call(f.querySelectorAll('input[name=custom]:checked'))
+          .map(function (box) { return box.value; }).join(', ');
+        return {
+          type: 'Quote',
+          name: f.name.value.trim(),
+          company: f.company.value.trim(),
+          email: f.email.value.trim(),
+          phone: f.phone.value.trim(),
+          buyer: f.buyer.value,
+          qty: String(parseInt(f.qty.value, 10)),
+          date: f.date.value,
+          personalise: custom,
+          message: f.message.value.trim()
+        };
+      },
+      'quote-thanks',
+      function (f) {
+        return 'Thanks, ' + firstName(f) + '. We’ll be in touch about your ' + parseInt(f.qty.value, 10) + ' BliXems with a written quote.';
+      });
   })();
 </script>
 </body>
