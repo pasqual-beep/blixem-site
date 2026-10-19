@@ -218,13 +218,10 @@
   .corp-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; margin-top: 44px; }
   .price-card { background: var(--cream); color: var(--ink); border-radius: 18px; padding: 28px 26px; }
   .price-card h3 { color: var(--deep); font-size: 1.3rem; margin-bottom: 14px; }
-  .tiers { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-  .tiers caption { text-align: left; }
-  .tiers th, .tiers td { padding: 11px 4px; border-bottom: 2px dashed var(--cream-2); text-align: left; }
-  .tiers thead th { font-family: var(--label); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.72rem; color: var(--rust); border-bottom: 2px solid var(--cream-2); }
-  .tiers td:last-child, .tiers th:last-child { text-align: right; }
-  .tiers td b { font-family: var(--display); font-weight: 400; font-size: 1.3rem; color: var(--deep); }
-  .tiers .from { font-size: 0.85rem; color: #5a5a4e; margin-right: 4px; }
+  .who-pays { margin: 0 0 16px; border-top: 2px solid var(--cream-2); }
+  .who-pays div { padding: 12px 0; border-bottom: 2px dashed var(--cream-2); }
+  .who-pays dt { font-family: var(--label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem; color: var(--rust); }
+  .who-pays dd { margin: 4px 0 0; }
   .price-card ul { margin: 0 0 14px; padding-left: 1.1em; }
   .price-card li { margin-bottom: 6px; }
   .price-card .fine { font-size: 0.9rem; color: #5a5a4e; margin: 0; }
@@ -281,7 +278,7 @@
       <a class="btn ghost" href="#how">How it works</a>
     </div>
     <div class="price-chip label">Launch price <strong>R999</strong></div>
-    <p class="bulk-link">Golf day, pro shop or golf course? <a href="#bulk">See bulk pricing</a></p>
+    <p class="bulk-link">Golf day, pro shop or golf course? <a href="#bulk">Get a bulk quote</a></p>
   </div>
 </header>
 <div class="stripes" aria-hidden="true"></div>
@@ -334,7 +331,7 @@
         <div class="card">
           <span class="label">Business</span>
           <h3>Golf days and clubs</h3>
-          <p>Hole prizes, goodie bags and pro-shop stock, with your logo on the ball. <a href="#bulk">See bulk pricing</a>.</p>
+          <p>Hole prizes, goodie bags and pro-shop stock, with your logo on the ball. <a href="#bulk">Get a bulk quote</a>.</p>
         </div>
         <div class="card">
           <span class="label">At home</span>
@@ -444,7 +441,7 @@
       <div class="section-head" id="golf-days">
         <span class="label">Bulk and trade</span>
         <h2>Golf days, pro shops and golf courses</h2>
-        <p>Buy 10 or more and the price drops. Add your logo and make it the prize everyone talks about at the 19th.</p>
+        <p>Buy in bulk and the price drops. Add your logo and make it the prize everyone talks about at the 19th.</p>
       </div>
       <div class="cards">
         <div class="card">
@@ -471,23 +468,19 @@
 
       <div class="corp-grid">
         <div class="price-card">
-          <h3>Bulk prices per bag</h3>
-          <table class="tiers">
-            <caption class="hp">Bulk prices per bag, excluding VAT</caption>
-            <thead><tr><th scope="col">How many</th><th scope="col">Per bag, ex VAT</th></tr></thead>
-            <tbody>
-              <tr><td>10 – 24</td><td><span class="from">from</span><b>R749</b></td></tr>
-              <tr><td>25 – 49</td><td><span class="from">from</span><b>R699</b></td></tr>
-              <tr><td>50 – 99</td><td><span class="from">from</span><b>R649</b></td></tr>
-              <tr><td>100 or more</td><td><span class="from">from</span><b>R599</b></td></tr>
-            </tbody>
-          </table>
+          <h3>Bulk, trade and wholesale</h3>
+          <p>Every order gets its own written quote. The more bags you order, the less each one costs.</p>
+          <dl class="who-pays">
+            <div><dt>Golf days and companies</dt><dd>Bulk pricing from 10 bags, for hole prizes, VIP gifts and sponsors.</dd></div>
+            <div><dt>Pro shops and resellers</dt><dd>Trade pricing, with no minimum order.</dd></div>
+            <div><dt>Wholesale and distributors</dt><dd>Wholesale pricing from 100 bags.</dd></div>
+            <div><dt>Hire-cart fleets</dt><dd>One for every cart, with your club's crest on the ball.</dd></div>
+          </dl>
           <ul>
             <li><b>Logos, names and prints:</b> priced with your quote.</li>
-            <li><b>Pro shops and hire-cart fleets:</b> ask us for trade pricing.</li>
             <li><b>Need it for a date?</b> Tell us. Personalised orders take longer, so ask early.</li>
           </ul>
-          <p class="fine">Launch prices. Every order gets a written quote before anything is final.</p>
+          <p class="fine">Retail price R999 incl VAT. Bulk, trade and wholesale prices are quoted ex VAT.</p>
         </div>
 
         <div class="form-card">
@@ -520,7 +513,8 @@
               <select id="q-buyer" name="buyer" required>
                 <option value="">Choose one</option>
                 <option>A golf day or company gifts</option>
-                <option>A pro shop (to resell)</option>
+                <option>A pro shop or shop (to resell)</option>
+                <option>Wholesale or distribution (100+)</option>
                 <option>Golf course hire carts</option>
                 <option>An estate or club (prizes, events)</option>
                 <option>Something else</option>
@@ -583,7 +577,7 @@
         </details>
         <details>
           <summary>Do you do bulk or trade prices?</summary>
-          <p>Yes. Bulk prices start at 10 bags, and pro shops and golf courses can ask for trade pricing. <a href="#bulk">Ask for a quote</a>.</p>
+          <p>Yes. Golf days and companies get bulk pricing from 10 bags, pro shops and resellers get trade pricing with no minimum, and wholesale pricing starts at 100 bags. Every order gets a written quote. <a href="#bulk">Ask for a quote</a>.</p>
         </details>
         <details>
           <summary>Can a golf course fit one to every hire cart?</summary>
