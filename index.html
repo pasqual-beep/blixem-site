@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BliXem · 19th Hole Boxing Co.</title>
-<meta name="description" content="BliXem: a punch ball that clamps onto your golf cart's roof post. Personalise it with a name, a face or your logo. Bulk pricing for golf days, pro shops and golf courses. Launch price R999.">
+<meta name="description" content="BliXem is a punch ball that clamps onto your golf cart's roof post. R1,499 incl VAT. Reserve yours now and pay only when it's ready to ship. Personalise it with a name, a face or your logo.">
 <link rel="canonical" href="https://blixemgolf.co.za/">
 <meta name="theme-color" content="#2c5a41">
 <meta property="og:type" content="website">
@@ -12,16 +12,16 @@
 <meta property="og:locale" content="en_ZA">
 <meta property="og:url" content="https://blixemgolf.co.za/">
 <meta property="og:title" content="BliXem · Bad shot? Blix it.">
-<meta property="og:description" content="A punch ball that clamps onto your golf cart's roof post. Take it out on the bag, not your fourball. Launch price R999.">
+<meta property="og:description" content="A punch ball that clamps onto your golf cart's roof post. R1,499. Reserve yours, pay nothing now.">
 <meta property="og:image" content="https://blixemgolf.co.za/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The BliXem badge on fairway green, with the words: Bad shot? Blix it. 19th Hole Boxing Co.">
+<meta property="og:image:alt" content="Illustration of a BliXem punch ball clamped to a golf cart's roof post, with the words: Bad shot? Blix it.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="BliXem · Bad shot? Blix it.">
-<meta name="twitter:description" content="A punch ball that clamps onto your golf cart's roof post. Take it out on the bag, not your fourball. Launch price R999.">
+<meta name="twitter:description" content="A punch ball that clamps onto your golf cart's roof post. R1,499. Reserve yours, pay nothing now.">
 <meta name="twitter:image" content="https://blixemgolf.co.za/og-image.png">
-<meta name="twitter:image:alt" content="The BliXem badge on fairway green, with the words: Bad shot? Blix it. 19th Hole Boxing Co.">
+<meta name="twitter:image:alt" content="Illustration of a BliXem punch ball clamped to a golf cart's roof post, with the words: Bad shot? Blix it.">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -30,8 +30,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&family=Shrikhand&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <!--
   BliXem landing page. One file, no build step.
-  Both forms (notify me + bulk quote) post to one Google Form, whose answers land in the
-  "BliXem sign-ups (Responses)" Google Sheet. The form URL and field IDs are in the script at the bottom.
+  The reserve form posts to the "BliXem sign-ups" Google Form, which saves each answer as a row in the
+  "BliXem sign-ups (Responses)" Google Sheet. Form URL and field IDs are in the script at the bottom.
+  Golf days, pro shops and trade live on golf-days.html.
 -->
 <style>
   :root {
@@ -46,6 +47,7 @@
     --rust-dark: #8f3d17;
     --gold: #e9b23a;
     --ink: #1f2a24;
+    --muted: #5a5a4e;
     --display: "Shrikhand", Georgia, "Times New Roman", serif;
     --label: "Josefin Sans", "Futura", "Century Gothic", "Trebuchet MS", sans-serif;
     --body: "Work Sans", "Helvetica Neue", Arial, sans-serif;
@@ -67,6 +69,7 @@
   a { color: inherit; }
   .wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 20px; }
   section { padding-block: 72px; }
+  [id] { scroll-margin-top: 12px; }
 
   .label {
     font-family: var(--label);
@@ -83,6 +86,7 @@
   .section-head { text-align: center; max-width: 640px; margin: 0 auto 44px; }
   .section-head .label { color: var(--rust); display: block; margin-bottom: 10px; }
   .section-head p { margin-top: 14px; }
+  .fine { font-size: 0.9rem; color: var(--muted); }
 
   /* 70s stripes */
   .stripes { height: 30px; background:
@@ -90,48 +94,57 @@
   .stripes.thin { height: 15px; }
 
   .btn {
-    display: inline-block;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
     font-family: var(--label);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     font-size: 0.9rem;
+    line-height: 1.3;
+    text-align: center;
     text-decoration: none;
     background: var(--rust);
     color: var(--cream);
     border: 0;
     border-radius: 999px;
-    padding: 16px 28px 14px;
+    padding: 16px 26px 14px;
     cursor: pointer;
     transition: background .15s, transform .15s;
   }
   .btn:hover { background: var(--rust-dark); }
   .btn:active { transform: translateY(1px); }
   .btn[disabled] { opacity: .6; cursor: wait; }
+  .btn svg { width: 20px; height: 20px; flex: none; }
   :focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; }
-  .hero :focus-visible, .who :focus-visible { outline-color: var(--gold); }
-  .corporate :focus-visible { outline-color: var(--cream); }
-  .corporate .form-card :focus-visible, .corporate .price-card :focus-visible { outline-color: var(--deep); }
+  .hero :focus-visible, .gifts :focus-visible, .teaser :focus-visible { outline-color: var(--gold); }
   .btn.ghost { background: transparent; color: var(--cream); box-shadow: inset 0 0 0 2px var(--cream); }
   .btn.ghost:hover { background: rgba(243,236,220,.12); }
+  .btn.ghost-dark { background: transparent; color: var(--deep); box-shadow: inset 0 0 0 2px var(--deep); }
+  .btn.ghost-dark:hover { background: rgba(31,68,48,.08); }
+
+  /* Status bar */
+  .status { background: var(--deep); color: var(--cream); text-align: center; padding: 8px 16px 7px; font-size: 0.7rem; letter-spacing: 0.14em; }
+  .status b { color: var(--gold); font-weight: 700; }
 
   /* Hero */
-  .hero { background: var(--fairway); color: var(--cream); padding-block: 48px 64px; text-align: center; }
-  .hero .badge { width: min(300px, 70vw); height: auto; display: block; margin: 0 auto 28px; }
-  .hero h1 { font-size: clamp(2.1rem, 6vw, 3.6rem); color: var(--cream); max-width: 15ch; margin: 0 auto; }
+  .hero { background: var(--fairway); color: var(--cream); padding-block: 36px 56px; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+  .hero-logo { width: 78px; height: auto; display: block; margin-bottom: 18px; }
+  .hero .kicker { color: var(--gold); display: block; margin-bottom: 12px; }
+  .hero h1 { font-size: clamp(2.1rem, 5.2vw, 3.3rem); color: var(--cream); max-width: 17ch; }
   .hero h1 em { font-style: normal; color: var(--gold); }
-  .hero .pitch { font-size: 1.15rem; max-width: 34em; margin: 20px auto 30px; color: #e4ddca; }
-  .hero .ctas { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
-  .price-chip {
-    display: inline-flex; align-items: baseline; gap: 10px;
-    margin-top: 26px; padding: 8px 18px;
-    border: 2px dashed rgba(233,178,58,.7); border-radius: 999px; color: #f2c65e;
-  }
-  .price-chip strong { font-family: var(--display); font-weight: 400; font-size: 1.4rem; color: var(--cream); letter-spacing: 0; }
-  .hero .bulk-link { display: block; margin-top: 18px; color: #e4ddca; font-size: 0.98rem; }
-  .hero .bulk-link a { color: var(--gold); font-weight: 600; }
+  .hero .pitch { font-size: 1.15rem; max-width: 32em; margin: 18px 0 18px; color: #e4ddca; }
+  .price-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 0 0 18px; }
+  .price-line strong { font-family: var(--display); font-weight: 400; font-size: 2.3rem; line-height: 1; color: var(--cream); }
+  .price-line span { color: #e4ddca; font-size: 0.98rem; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .reassure { margin: 14px 0 0; color: #e4ddca; font-size: 0.98rem; }
+  .bulk-link { margin: 16px 0 0; color: #e4ddca; font-size: 0.95rem; }
+  .bulk-link a { color: var(--gold); font-weight: 600; }
+  .hero-art { margin: 0; }
+  .hero-art figcaption { text-align: center; color: #cfc8b4; font-size: 0.85rem; margin-top: 10px; }
 
-  /* How it works */
+  /* How it works + what's in the box */
   .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; grid-template-columns: repeat(3, 1fr); }
   .step { background: var(--paper); border: 2px solid var(--cream-2); border-radius: var(--radius); padding: 28px 24px 22px; position: relative; }
   .step .num, .make .icon {
@@ -145,16 +158,25 @@
   .step p { margin: 0; }
   .note { margin-top: 26px; text-align: center; font-weight: 600; color: var(--deep); }
   .note span { background: var(--gold); padding: 3px 10px; border-radius: 6px; }
+  .box { margin: 40px auto 0; max-width: 720px; background: var(--paper); border: 2px dashed var(--cream-2); border-radius: var(--radius); padding: 26px 28px 20px; }
+  .box h3 { font-size: 1.3rem; }
+  .box ul { margin: 10px 0 12px; padding-left: 1.2em; columns: 2; column-gap: 32px; }
+  .box li { margin-bottom: 6px; break-inside: avoid; }
+  .box .fine { margin: 0; }
 
-  /* Who it's for */
-  .who { background: var(--deep); color: var(--cream); }
-  .who h2, .who h3 { color: var(--cream); }
-  .who .section-head .label { color: var(--gold); }
-  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  /* Gifts */
+  .gifts { background: var(--deep); color: var(--cream); }
+  .gifts h2, .gifts h3 { color: var(--cream); }
+  .gifts .section-head .label { color: var(--gold); }
+  .gifts .section-head p { color: #dcd5c2; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .card { border: 2px solid rgba(243,236,220,.22); border-radius: var(--radius); padding: 24px 20px; }
   .card .label { color: var(--gold); font-size: 0.72rem; display: block; margin-bottom: 8px; }
   .card p { margin: 0; color: #dcd5c2; font-size: 0.98rem; }
-  .card p a { color: var(--gold); }
+  .section-cta { margin-top: 34px; text-align: center; }
+  .section-cta .btn { margin-bottom: 12px; }
+  .section-cta p { margin: 0; font-size: 0.95rem; }
+  .gifts .section-cta a:not(.btn) { color: var(--gold); font-weight: 600; }
 
   /* Make it yours */
   .make { background: var(--cream-2); }
@@ -169,62 +191,60 @@
   .make-card .where { display: block; font-size: 0.7rem; color: var(--rust); margin-bottom: 6px; }
   .make-foot { max-width: 680px; margin: 30px auto 0; text-align: center; }
   .make-foot p { margin: 0 0 8px; }
-  .make-foot .fine { font-size: 0.9rem; color: #5a5a4e; }
 
-  /* Forms (shared) */
+  /* Reserve */
+  .reserve-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 44px; align-items: start; }
+  .deal .label { color: var(--rust); display: block; margin-bottom: 8px; }
+  .deal h2 { margin-bottom: 12px; }
+  .deal .price-big { font-family: var(--display); font-size: clamp(3rem, 8vw, 4.2rem); line-height: 1; color: var(--deep); margin: 8px 0 4px; }
+  .deal .price-sub { color: var(--muted); margin-bottom: 22px; }
+  .ticks { list-style: none; padding: 0; margin: 0 0 26px; }
+  .ticks li { position: relative; padding-left: 34px; margin-bottom: 10px; }
+  .ticks li::before {
+    content: ""; position: absolute; left: 0; top: 3px; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--fairway) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%23f3ecdc' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat;
+  }
+  .ticks b { color: var(--deep); }
+  .how-reserve { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .how-reserve li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; background: var(--paper); border: 2px solid var(--cream-2); border-radius: 12px; padding: 12px 14px; }
+  .how-reserve .n { width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: var(--deep); font-family: var(--display); text-align: center; line-height: 34px; }
+  .how-reserve b { display: block; color: var(--deep); }
+  .how-reserve span { font-size: 0.95rem; color: var(--muted); }
+
+  /* Forms */
   .form-card { background: var(--paper); color: var(--ink); border: 2px solid var(--cream-2); border-radius: 18px; padding: 30px 26px; box-shadow: 0 10px 0 var(--fairway); }
   .field { margin-bottom: 16px; }
-  .field > label, .field > .label { display: block; margin-bottom: 6px; color: var(--deep); font-size: 0.75rem; }
+  .field > label { display: block; margin-bottom: 6px; color: var(--deep); font-size: 0.75rem; }
   .field .opt { color: #6b6b5e; letter-spacing: 0.08em; text-transform: none; font-family: var(--body); font-weight: 500; font-size: 0.85rem; }
+  .field .hint { font-size: 0.88rem; color: var(--muted); margin: 6px 0 0; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
-  input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date], select, textarea {
+  input[type=text], input[type=email], input[type=tel], input[type=number], select, textarea {
     width: 100%; font: inherit; font-size: 1rem; color: var(--ink);
     background: #fff; border: 2px solid #cfc4aa; border-radius: 10px; padding: 12px 14px;
   }
   select { appearance: none; -webkit-appearance: none; padding-right: 40px; cursor: pointer;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%231f4430' stroke-width='2'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 14px center; }
-  textarea { min-height: 96px; resize: vertical; }
   input:focus, select:focus, textarea:focus { border-color: var(--fairway); outline: none; box-shadow: 0 0 0 3px rgba(44,90,65,.2); }
   [aria-invalid=true] { border-color: var(--orange) !important; }
   .check { display: flex; gap: 12px; align-items: flex-start; margin: 6px 0 18px; font-weight: 500; cursor: pointer; }
   .check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--orange); flex: none; }
-  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; border: 0; padding: 0; margin: 0 0 16px; }
-  .checks legend { padding: 0; margin-bottom: 8px; color: var(--deep); font-size: 0.75rem; }
-  .checks .check { margin: 4px 0; font-size: 0.97rem; }
   .error { color: var(--orange-dark); font-size: 0.9rem; margin-top: 6px; }
   .form-card .btn { width: 100%; font-size: 1rem; }
-  .popia { font-size: 0.88rem; color: #5a5a4e; margin: 14px 0 0; }
-  .thanks { text-align: center; padding: 18px 4px; }
-  .thanks .big { font-family: var(--display); font-size: 2rem; color: var(--deep); margin-bottom: 8px; }
+  .popia { font-size: 0.88rem; color: var(--muted); margin: 14px 0 0; }
+  .wa-line { margin: 14px 0 0; font-size: 0.95rem; }
+  .wa-line a { color: var(--deep); font-weight: 600; }
   .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
-  /* Notify / pre-order */
-  .notify-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; }
-  .price-box { text-align: left; }
-  .price-box .label { color: var(--rust); }
-  .price-big { font-family: var(--display); font-size: clamp(3.4rem, 9vw, 4.6rem); line-height: 1; color: var(--deep); margin: 10px 0 6px; }
-  .price-box .launch-tag { display: inline-block; background: var(--rust); color: var(--cream); padding: 5px 12px 3px; border-radius: 6px; font-size: 0.72rem; }
-  .price-box ul { padding-left: 1.1em; margin: 20px 0 0; }
-  .price-box li { margin-bottom: 6px; }
-
-  /* Corporate, golf courses and pro shops */
-  .corporate { background: var(--rust); color: var(--cream); }
-  .corporate h2, .corporate h3 { color: var(--cream); }
-  .corporate .section-head .label { color: var(--cream); }
-  .corporate .card { border-color: rgba(243,236,220,.45); }
-  .corporate .card .label { color: var(--gold); }
-  .corporate .card p { color: var(--cream); }
-  .corp-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; margin-top: 44px; }
-  .price-card { background: var(--cream); color: var(--ink); border-radius: 18px; padding: 28px 26px; }
-  .price-card h3 { color: var(--deep); font-size: 1.3rem; margin-bottom: 14px; }
-  .who-pays { margin: 0 0 16px; border-top: 2px solid var(--cream-2); }
-  .who-pays div { padding: 12px 0; border-bottom: 2px dashed var(--cream-2); }
-  .who-pays dt { font-family: var(--label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem; color: var(--rust); }
-  .who-pays dd { margin: 4px 0 0; }
-  .price-card ul { margin: 0 0 14px; padding-left: 1.1em; }
-  .price-card li { margin-bottom: 6px; }
-  .price-card .fine { font-size: 0.9rem; color: #5a5a4e; margin: 0; }
+  /* Thank-you */
+  .thanks { padding: 6px 2px; }
+  .thanks .big { font-family: var(--display); font-size: 1.9rem; line-height: 1.2; color: var(--deep); margin-bottom: 10px; }
+  .thanks .ref { display: inline-block; font-family: var(--label); font-weight: 700; letter-spacing: 0.12em; background: var(--gold); color: var(--deep); padding: 4px 10px 2px; border-radius: 6px; }
+  .thanks h3 { margin-top: 22px; }
+  .thanks ol { padding-left: 1.3em; margin: 6px 0 20px; }
+  .thanks li { margin-bottom: 8px; }
+  .thanks .btn { width: 100%; margin-top: 4px; }
+  .thanks .btn + .btn { margin-top: 12px; }
 
   /* FAQ */
   .faq { max-width: 760px; margin: 0 auto; }
@@ -241,44 +261,248 @@
   }
   details[open] summary::after { content: "–"; }
   details p { margin: 0 0 20px; }
+  details a { color: var(--rust); font-weight: 600; }
+  .faq-end { text-align: center; margin-top: 28px; }
+  .faq-end a { color: var(--deep); font-weight: 600; }
+
+  /* Founders */
+  .founders { background: var(--cream-2); }
+  .founders-card { max-width: 760px; margin: 0 auto; background: var(--paper); border-radius: 18px; padding: 34px 32px; box-shadow: 0 8px 0 rgba(31,68,48,.12); }
+  .founders-card .label { color: var(--rust); display: block; margin-bottom: 10px; }
+  .founders-card h2 { margin-bottom: 14px; }
+  .founders-card p:last-child { margin-bottom: 0; }
+  .founders-card a { color: var(--deep); font-weight: 600; }
+
+  /* Golf-days teaser */
+  .teaser { background: var(--rust); color: var(--cream); padding-block: 56px; }
+  .teaser-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: center; }
+  .teaser .label { color: var(--cream); display: block; margin-bottom: 10px; }
+  .teaser h2 { color: var(--cream); margin-bottom: 12px; }
+  .teaser p { margin: 0; }
+  .teaser .actions { display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+  .teaser .btn { background: var(--deep); }
+  .teaser .btn:hover { background: #163323; }
+  .teaser .actions a:not(.btn) { color: var(--cream); font-weight: 600; text-align: center; }
 
   /* Footer */
-  footer { background: var(--cream-2); padding-block: 48px 40px; text-align: center; color: var(--deep); }
+  footer { background: var(--cream-2); padding-block: 48px 110px; text-align: center; color: var(--deep); }
   footer .badge { width: 150px; height: auto; display: block; margin: 0 auto 18px; }
   footer p { font-size: 0.92rem; margin: 6px 0; }
   footer .label { font-size: 0.72rem; }
 
+  /* WhatsApp float (desktop) and sticky bar (phones) */
+  .wa-float {
+    position: fixed; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 50;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #25d366; color: #08361c; text-decoration: none;
+    font-family: var(--label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.82rem;
+    padding: 12px 18px 11px 14px; border-radius: 999px; box-shadow: 0 6px 18px rgba(31,42,36,.28);
+  }
+  .wa-float:hover { background: #1fbe5b; }
+  .wa-float svg { width: 22px; height: 22px; }
+  .sticky { display: none; }
+
   /* Responsive */
   @media (max-width: 900px) {
-    .cards, .make-grid { grid-template-columns: repeat(2, 1fr); }
-    .notify-grid, .corp-grid { grid-template-columns: 1fr; gap: 28px; }
+    .hero-grid, .reserve-grid, .teaser-grid { grid-template-columns: 1fr; gap: 28px; }
+    .hero-art { max-width: 420px; margin: 0 auto; width: 100%; }
+    .cards { grid-template-columns: 1fr; }
+    .make-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 720px) {
     section { padding-block: 56px; }
     .steps { grid-template-columns: 1fr; }
+    .box ul { columns: 1; }
+    .wa-float { display: none; }
+    .sticky {
+      display: flex; align-items: center; gap: 10px;
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+      background: var(--deep); color: var(--cream);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      box-shadow: 0 -6px 18px rgba(31,42,36,.25);
+      transform: translateY(110%); visibility: hidden;
+      transition: transform .2s ease, visibility .2s;
+    }
+    .sticky.show { transform: none; visibility: visible; }
+    .sticky-price { font-family: var(--display); font-size: 1.25rem; line-height: 1; white-space: nowrap; }
+    .sticky .btn { flex: 1; padding: 12px 10px 10px; font-size: 0.78rem; letter-spacing: 0.08em; }
+    .sticky-wa { flex: none; width: 44px; height: 44px; border-radius: 50%; background: #25d366; color: #08361c; display: flex; align-items: center; justify-content: center; }
+    .sticky-wa svg { width: 24px; height: 24px; }
   }
   @media (max-width: 520px) {
     .wrap { padding-inline: 16px; }
-    .cards, .make-grid, .row, .checks { grid-template-columns: 1fr; }
+    .hero { padding-block: 22px 44px; }
+    .hero-logo { width: 60px; margin-bottom: 12px; }
+    .hero .pitch { font-size: 1.05rem; margin: 14px 0; }
     .hero .ctas .btn { width: 100%; }
-    .form-card, .price-card { padding: 24px 18px; }
+    .btn { letter-spacing: 0.06em; padding-inline: 18px; }
+    .make-grid, .row { grid-template-columns: 1fr; }
+    .form-card { padding: 24px 18px; }
+    .founders-card { padding: 26px 20px; }
   }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .sticky { transition: none; }
+  }
 </style>
 </head>
 <body>
 
+<div class="status label">Reservations open · <b>Pay nothing now</b> · First batch planned before Father's Day 2027</div>
+
 <header class="hero">
-  <div class="wrap">
-    <img src="badge-dark.svg" class="badge" width="200" height="225" alt="BliXem, 19th Hole Boxing Co., Est. 2027" fetchpriority="high">
-    <h1>Bad shot? Take it out on the bag, <em>not your fourball.</em></h1>
-    <p class="pitch">BliXem is a punch ball that clamps onto your golf cart's front roof post. Give it one good klap, get it out of your system, and walk to the next tee smiling.</p>
-    <div class="ctas">
-      <a class="btn" href="#notify">Notify me</a>
-      <a class="btn ghost" href="#how">How it works</a>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <img src="badge-dark.svg" class="hero-logo" width="200" height="225" alt="BliXem, 19th Hole Boxing Co." fetchpriority="high">
+      <span class="label kicker">Reservations open</span>
+      <h1>Bad shot? Take it out on the bag, <em>not your fourball.</em></h1>
+      <p class="pitch">A punch ball that clamps onto your golf cart's roof post. One good klap and you're back in the game.</p>
+      <p class="price-line"><strong>R1,499</strong> <span>incl VAT · plus delivery</span></p>
+      <div class="ctas">
+        <a class="btn" id="hero-reserve" href="#reserve">Reserve yours — pay nothing now</a>
+        <a class="btn ghost" href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%20have%20a%20question%20about%20BliXem." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.7 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Ask us on WhatsApp</a>
+      </div>
+      <p class="reassure">No card. No deposit. We send a payment link when stock lands.</p>
+      <p class="bulk-link">Golf day, pro shop or golf course? <a href="golf-days.html">Get a bulk quote</a></p>
     </div>
-    <div class="price-chip label">Launch price <strong>R999</strong></div>
-    <p class="bulk-link">Golf day, pro shop or golf course? <a href="#bulk">Get a bulk quote</a></p>
+    <figure class="hero-art">
+      <style>
+.bx-anim{display:block;width:100%;max-width:520px;height:auto;margin:0 auto}
+.bx-anim .bx-anim-swing{transform-box:fill-box;transform-origin:50% 0}
+.bx-anim .bx-anim-squash{transform-box:fill-box;transform-origin:50% 50%}
+.bx-anim .bx-anim-bolt{transform-box:fill-box;transform-origin:75% 100%}
+.bx-anim .bx-anim-word{transform-box:fill-box;transform-origin:50% 50%;transform:rotate(-8deg)}
+.bx-anim .bx-anim-word text{font-family:Shrikhand,Georgia,"Times New Roman",serif}
+.bx-anim .bx-anim-tag{font-family:"Josefin Sans",Futura,"Century Gothic","Trebuchet MS",sans-serif;font-weight:700}
+@media (prefers-reduced-motion:no-preference){
+.bx-anim .bx-anim-fist{animation:bx-anim-fist 3.6s infinite}
+.bx-anim .bx-anim-swing{animation:bx-anim-swing 3.6s infinite}
+.bx-anim .bx-anim-squash{animation:bx-anim-squash 3.6s infinite}
+.bx-anim .bx-anim-bolt{animation:bx-anim-bolt 3.6s infinite}
+.bx-anim .bx-anim-word{animation:bx-anim-word 3.6s infinite}
+.bx-anim .bx-anim-spark{animation:bx-anim-spark 3.6s infinite}
+.bx-anim .bx-anim-speed{animation:bx-anim-speed 3.6s infinite}
+}
+@keyframes bx-anim-fist{
+0%,9%{transform:translateX(-64px);animation-timing-function:ease-in-out}
+15%{transform:translateX(-84px);animation-timing-function:cubic-bezier(.6,0,1,.6)}
+18.5%{transform:translateX(0)}
+22%{transform:translateX(14px);animation-timing-function:ease-in-out}
+36%,100%{transform:translateX(-64px)}
+}
+@keyframes bx-anim-swing{
+0%,18.5%{transform:rotate(0);animation-timing-function:cubic-bezier(.15,.75,.35,1)}
+30%{transform:rotate(-36deg);animation-timing-function:ease-in-out}
+42%{transform:rotate(15deg);animation-timing-function:ease-in-out}
+52%{transform:rotate(-8deg);animation-timing-function:ease-in-out}
+61%{transform:rotate(4.5deg);animation-timing-function:ease-in-out}
+69%{transform:rotate(-2deg);animation-timing-function:ease-in-out}
+76%{transform:rotate(.8deg);animation-timing-function:ease-in-out}
+82%,100%{transform:rotate(0)}
+}
+@keyframes bx-anim-squash{
+0%,18.5%{transform:scale(1)}
+20%{transform:scale(.9,1.05)}
+23.5%{transform:scale(1.03,.98)}
+27%,100%{transform:scale(1)}
+}
+@keyframes bx-anim-bolt{
+0%,18%{opacity:0;transform:scale(.3)}
+19.5%{opacity:1;transform:scale(1.18)}
+23%{opacity:1;transform:scale(1)}
+26%{opacity:.35}
+27.5%{opacity:1}
+31%{opacity:1;transform:scale(1)}
+35%,100%{opacity:0;transform:scale(1)}
+}
+@keyframes bx-anim-word{
+0%,18.5%{opacity:0;transform:scale(.4) rotate(-8deg)}
+21%{opacity:1;transform:scale(1.12) rotate(-8deg)}
+24%{opacity:1;transform:scale(1) rotate(-8deg)}
+39%{opacity:1;transform:scale(1) rotate(-8deg)}
+45%,100%{opacity:0;transform:scale(1) rotate(-8deg)}
+}
+@keyframes bx-anim-spark{
+0%,18.5%{opacity:0}
+19.5%{opacity:1}
+26%,100%{opacity:0}
+}
+@keyframes bx-anim-speed{
+0%,14%{opacity:0}
+16.5%,19%{opacity:.85}
+23%,100%{opacity:0}
+}
+</style>
+<svg class="bx-anim" width="520" height="520" viewBox="0 0 520 520" role="img" aria-label="Illustration: a BliXem punch ball clamped to a golf cart's roof post, swinging after a punch" xmlns="http://www.w3.org/2000/svg">
+<defs><clipPath id="bx-anim-clip"><rect x="12" y="12" width="496" height="496" rx="20"/></clipPath></defs>
+<rect width="520" height="520" rx="30" fill="#1f4430"/>
+<g clip-path="url(#bx-anim-clip)">
+<circle cx="196" cy="276" r="150" fill="#2c5a41" opacity=".5"/>
+<path d="M12 452C120 436 220 444 300 454L508 466V508H12Z" fill="#2c5a41"/>
+<ellipse cx="64" cy="452" rx="11" ry="3.5" fill="#1f4430"/>
+<path d="M64 451V386" stroke="#f3ecdc" stroke-width="3" stroke-linecap="round"/>
+<path d="M65 386L98 396L65 406Z" fill="#e9b23a"/>
+<!-- cart -->
+<path d="M384 82H484V352L384 358Z" fill="#f3ecdc" opacity=".08"/>
+<path d="M402 300L452 124M424 314L468 160" stroke="#f3ecdc" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/>
+<rect x="482" y="70" width="14" height="300" fill="#f3ecdc"/>
+<rect x="362" y="66" width="22" height="310" fill="#f3ecdc"/>
+<rect x="376" y="74" width="4" height="296" fill="#1f4430" opacity=".18"/>
+<rect x="246" y="40" width="300" height="34" rx="14" fill="#f3ecdc"/>
+<path d="M262 63H546" stroke="#1f4430" stroke-width="3"/>
+<path d="M300 508V452C300 408 322 372 372 364L508 350V508Z" fill="#f3ecdc"/>
+<path d="M312 436C360 428 440 424 508 422" fill="none" stroke="#1f4430" stroke-width="3"/>
+<circle cx="346" cy="404" r="14" fill="#e9b23a" stroke="#1f4430" stroke-width="4"/>
+<circle cx="341" cy="399" r="3.5" fill="#f3ecdc"/>
+<circle cx="432" cy="510" r="48" fill="#1f4430"/>
+<circle cx="432" cy="510" r="36" fill="#16301f"/>
+<circle cx="432" cy="510" r="16" fill="none" stroke="#f3ecdc" stroke-width="5"/>
+<!-- arm + clamp -->
+<path d="M345 214V142Q345 128 331 128H196" fill="none" stroke="#1f4430" stroke-width="21" stroke-linecap="round"/>
+<path d="M345 214V142Q345 128 331 128H196" fill="none" stroke="#f3ecdc" stroke-width="13" stroke-linecap="round"/>
+<rect x="328" y="150" width="44" height="50" rx="7" fill="#2c5a41" stroke="#f3ecdc" stroke-width="3"/>
+<rect x="374" y="150" width="22" height="50" rx="7" fill="#2c5a41" stroke="#f3ecdc" stroke-width="3"/>
+<circle cx="340" cy="175" r="4" fill="#f3ecdc"/>
+<rect x="395" y="170" width="12" height="10" fill="#f3ecdc"/>
+<rect x="406" y="158" width="16" height="34" rx="5" fill="#e9b23a" stroke="#1f4430" stroke-width="3"/>
+<path d="M411 164V186M417 164V186" stroke="#1f4430" stroke-width="2"/>
+<rect x="185" y="117" width="22" height="29" rx="5" fill="#e9b23a" stroke="#1f4430" stroke-width="3"/>
+<!-- swinging ball, pivot at swivel (196,148) -->
+<g transform="translate(196 148)"><g class="bx-anim-swing">
+<path d="M0 0V3L-5 5.5L5 8.5L-5 11.5L5 14.5L0 17V18" fill="none" stroke="#f3ecdc" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cy="22.5" r="5" fill="none" stroke="#f3ecdc" stroke-width="3"/>
+<g class="bx-anim-squash">
+<rect x="-9" y="27" width="18" height="10" rx="3" fill="#a8481c" stroke="#f3ecdc" stroke-width="2"/>
+<path d="M-9 35C-9 49-20 61-30 79C-44 103-50 129-46 149C-40 171-20 181 0 181C20 181 40 171 46 149C50 129 44 103 30 79C20 61 9 49 9 35Z" fill="#d2602a" stroke="#f3ecdc" stroke-width="3"/>
+<path d="M9 36C14 56 24 64 32 82C44 106 48 130 44 150C38 170 20 179 2 179C24 168 34 148 34 124C34 98 20 66 9 36Z" fill="#a8481c" opacity=".55"/>
+<ellipse cx="-24" cy="112" rx="5.5" ry="17" transform="rotate(14 -24 112)" fill="#f3ecdc" opacity=".35"/>
+<path d="M0 38C-15 80-15 140 0 178M0 38C15 80 15 140 0 178" fill="none" stroke="#f3ecdc" stroke-width="2.2" stroke-dasharray="5 4"/>
+</g></g></g>
+<circle cx="196" cy="148" r="4" fill="#f3ecdc"/>
+<!-- fist -->
+<g transform="translate(148 288)"><g class="bx-anim-fist">
+<path class="bx-anim-speed" d="M-160-48H-92M-138-60H-104M-160 48H-92" stroke="#f3ecdc" stroke-width="4" stroke-linecap="round"/>
+<path d="M-82-28C-66-35-46-37-26-35V35C-46 36-66 33-82 28Z" fill="#f3ecdc" stroke="#1f4430" stroke-width="3" stroke-linejoin="round"/>
+<rect x="-34" y="17" width="29" height="16" rx="8" fill="#f3ecdc" stroke="#1f4430" stroke-width="3" stroke-linejoin="round"/>
+<rect x="-34" y="1" width="32" height="17" rx="8.5" fill="#f3ecdc" stroke="#1f4430" stroke-width="3" stroke-linejoin="round"/>
+<rect x="-35" y="-16" width="35" height="17" rx="8.5" fill="#f3ecdc" stroke="#1f4430" stroke-width="3" stroke-linejoin="round"/>
+<rect x="-37" y="-34" width="36" height="18" rx="9" fill="#f3ecdc" stroke="#1f4430" stroke-width="3" stroke-linejoin="round"/>
+<path d="M-72 30C-62 16-44 8-24 6C-14 5-9 10-9 15C-9 21-14 23-21 23C-39 24-55 30-63 34Z" fill="#f3ecdc" stroke="#1f4430" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="-62" cy="-23" r="1.7" fill="#1f4430"/><circle cx="-54" cy="-24.5" r="1.7" fill="#1f4430"/><circle cx="-46" cy="-25.5" r="1.7" fill="#1f4430"/>
+<path d="M-82-28L-66-33L-65-14Q-65-10-69-10H-82Z" fill="#2c5a41" stroke="#1f4430" stroke-width="2.5" stroke-linejoin="round"/>
+<rect x="-330" y="-27" width="236" height="54" fill="#a8481c" stroke="#1f4430" stroke-width="3"/>
+<rect x="-100" y="-31" width="22" height="62" rx="5" fill="#8f3d17" stroke="#1f4430" stroke-width="3"/>
+</g></g>
+<!-- impact -->
+<path class="bx-anim-spark" d="M144 330L142 346M128 322L118 335M160 330L166 344" stroke="#e9b23a" stroke-width="4" stroke-linecap="round"/>
+<g class="bx-anim-bolt"><path transform="translate(113 162) rotate(-25) scale(1.2)" d="M10 0H38L26 30H42L6 80L16 42H0Z" fill="#e9b23a" stroke="#1f4430" stroke-width="3" stroke-linejoin="round"/></g>
+<g class="bx-anim-word"><text x="80" y="134" text-anchor="middle" font-size="34" fill="#a8481c" transform="translate(3 3)">KLAP!</text><text x="80" y="134" text-anchor="middle" font-size="34" fill="#f3ecdc">KLAP!</text></g>
+</g>
+<rect x="12" y="12" width="496" height="496" rx="20" fill="none" stroke="#f3ecdc" stroke-width="3"/>
+<g class="bx-anim-tag"><rect x="30" y="30" width="172" height="32" rx="16" fill="#1f4430" stroke="#f3ecdc" stroke-width="2"/><text x="117" y="51.8" text-anchor="middle" font-size="16" letter-spacing="2" fill="#f3ecdc">ILLUSTRATION</text></g>
+</svg>
+      <figcaption>Illustration. Real photos coming when our samples land.</figcaption>
+    </figure>
   </div>
 </header>
 <div class="stripes" aria-hidden="true"></div>
@@ -308,36 +532,49 @@
         </li>
       </ol>
       <p class="note"><span>Only use BliXem when the cart is parked.</span></p>
+
+      <div class="box">
+        <h3>What's in the box</h3>
+        <ul>
+          <li>A punch ball, with a pump to blow it up</li>
+          <li>A spring and swivel, so it bounces back</li>
+          <li>An arm that holds the ball out from the post</li>
+          <li>A hand-tightened clamp for the front roof post (made for about 19–35 mm, being tested on Club Car and E-Z-GO)</li>
+          <li>A "parked only" safety card</li>
+          <li>The BliXem box</li>
+        </ul>
+        <p class="fine">We confirm the final parts once our samples pass testing.</p>
+      </div>
     </div>
   </section>
 
-  <section class="who" id="who">
+  <section class="gifts" id="gifts">
     <div class="wrap">
       <div class="section-head">
-        <span class="label">Who it's for</span>
-        <h2>For every golfer who's ever said "bliksem!"</h2>
+        <span class="label">Gifts</span>
+        <h2>For the golfer who has everything (except patience)</h2>
+        <p>They've got the balls, the tees and the rangefinder. They haven't got this, with their name on it.</p>
       </div>
       <div class="cards">
         <div class="card">
-          <span class="label">Gifts</span>
-          <h3>The golfer who has everything</h3>
-          <p>They have the balls, the tees and the gloves. They don't have this, with their name on it.</p>
-        </div>
-        <div class="card">
           <span class="label">Sun 20 June 2027</span>
           <h3>Father's Day</h3>
-          <p>A gift Dad will actually use, every round. We're aiming to land the first batch before Father's Day.</p>
+          <p>A gift Dad will use every round. Our first batch is planned to land before Father's Day, and you only pay when yours is ready to ship, so you'll know it's on time before you pay.</p>
         </div>
         <div class="card">
-          <span class="label">Business</span>
-          <h3>Golf days and clubs</h3>
-          <p>Hole prizes, goodie bags and pro-shop stock, with your logo on the ball. <a href="#bulk">Get a bulk quote</a>.</p>
+          <span class="label">Christmas 2026</span>
+          <h3>Tell them it's coming</h3>
+          <p>Stock won't be here by Christmas. Reserve one now, tell them a BliXem is on its way, and pay only when it's ready to ship.</p>
         </div>
         <div class="card">
-          <span class="label">At home</span>
-          <h3>Estate cart owners</h3>
-          <p>Your own cart, your own BliXem. Clamp it on for the weekend fourball.</p>
+          <span class="label">Make it theirs</span>
+          <h3>Their name, their face, your words</h3>
+          <p>Their name on the ball. Their face (or the oke who never buys a round) on the bag. Your own message on the gift box.</p>
         </div>
+      </div>
+      <div class="section-cta">
+        <a class="btn" href="#reserve">Reserve yours — pay nothing now</a>
+        <p><a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%27d%20like%20to%20give%20a%20BliXem%20as%20a%20gift." target="_blank" rel="noopener">Ask about a gift on WhatsApp</a></p>
       </div>
     </div>
   </section>
@@ -377,180 +614,102 @@
         </div>
       </div>
       <div class="make-foot">
-        <p>Personalised BliXems are made to order. Prices come out at launch, so tell us what you'd like when you sign up and you'll hear first.</p>
+        <p>Personalising costs extra. We confirm the price before you pay.</p>
         <p class="fine">We only print someone's face with their OK, and we can say no to anything hurtful or rude.</p>
+      </div>
+      <div class="section-cta">
+        <a class="btn" href="#reserve">Reserve yours — pay nothing now</a>
       </div>
     </div>
   </section>
 
-  <section id="notify">
-    <div class="wrap notify-grid">
-      <div class="price-box">
-        <span class="label">Pre-order</span>
-        <div class="price-big">R999</div>
-        <span class="launch-tag label">Launch price</span>
-        <p style="margin-top:18px">BliXem launches in 2027. Leave your details and we'll tell you the moment it's ready to order.</p>
-        <ul>
-          <li>Delivered anywhere in South Africa</li>
-          <li>Planned for before Father's Day 2027</li>
-          <li>No payment now. Signing up doesn't commit you to anything.</li>
+  <section id="reserve">
+    <span id="notify"></span>
+    <div class="wrap reserve-grid">
+      <div class="deal">
+        <span class="label">Reserve</span>
+        <h2>Reserve yours. Pay nothing now.</h2>
+        <div class="price-big">R1,499</div>
+        <p class="price-sub">incl VAT, plus delivery</p>
+        <ul class="ticks">
+          <li><b>Pay nothing now.</b> No card, no deposit.</li>
+          <li><b>Changed your mind?</b> Cancel any time before you pay. Just tell us.</li>
+          <li><b>Pay only when yours is ready to ship.</b> We send you a payment link.</li>
+          <li><b>Doesn't fit, or not for you?</b> Send it back within 7 days of delivery for a refund, unless it's personalised.</li>
+          <li><b>6 months' cover</b> against faults.</li>
+          <li>Reservations are filled in the order they come in.</li>
         </ul>
+        <ol class="how-reserve">
+          <li><span class="n" aria-hidden="true">1</span><div><b>Reserve</b><span>30 seconds. No card.</span></div></li>
+          <li><span class="n" aria-hidden="true">2</span><div><b>We message you</b><span>When stock lands, you get a payment link.</span></div></li>
+          <li><span class="n" aria-hidden="true">3</span><div><b>Pay, then we courier it</b><span>Anywhere in South Africa.</span></div></li>
+        </ol>
       </div>
 
       <div class="form-card">
-        <form id="notify-form" novalidate>
+        <form id="reserve-form" novalidate>
           <div class="field">
-            <label class="label" for="n-name">Name</label>
-            <input type="text" id="n-name" name="name" autocomplete="name" maxlength="120" required>
-            <div class="error" id="n-name-error" hidden>Please add your name.</div>
+            <label class="label" for="r-name">Name</label>
+            <input type="text" id="r-name" name="name" autocomplete="name" maxlength="120" required>
+            <div class="error" id="r-name-error" hidden>Please add your name.</div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label class="label" for="r-phone">WhatsApp number</label>
+              <input type="tel" id="r-phone" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" placeholder="e.g. 082 123 4567" required>
+              <div class="error" id="r-phone-error" hidden>Please check your number.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="r-email">Email</label>
+              <input type="email" id="r-email" name="email" autocomplete="email" inputmode="email" maxlength="200" required>
+              <div class="error" id="r-email-error" hidden>Please check your email address.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label class="label" for="r-qty">How many</label>
+              <input type="number" id="r-qty" name="qty" min="1" max="10" step="1" value="1" inputmode="numeric" required>
+              <div class="error" id="r-qty-error" hidden>Choose 1 to 10. Need more? See bulk quotes.</div>
+            </div>
+            <div class="field">
+              <label class="label" for="r-for">What's it for? <span class="opt">(optional)</span></label>
+              <select id="r-for" name="whatfor">
+                <option value="">Choose one</option>
+                <option>For me</option>
+                <option>Gift: Christmas or a birthday</option>
+                <option>Gift: Father's Day 2027</option>
+                <option>Gift: something else</option>
+              </select>
+            </div>
           </div>
           <div class="field">
-            <label class="label" for="n-email">Email</label>
-            <input type="email" id="n-email" name="email" autocomplete="email" inputmode="email" maxlength="200" required>
-            <div class="error" id="n-email-error" hidden>Please check your email address.</div>
-          </div>
-          <div class="field">
-            <label class="label" for="n-phone">WhatsApp <span class="opt">(optional)</span></label>
-            <input type="tel" id="n-phone" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" placeholder="e.g. 082 123 4567">
-          </div>
-          <div class="field">
-            <label class="label" for="n-personalise">Personalise it? <span class="opt">(optional)</span></label>
-            <select id="n-personalise" name="personalise">
+            <label class="label" for="r-personalise">Personalise? <span class="opt">(optional)</span></label>
+            <select id="r-personalise" name="personalise">
               <option value="">Not sure yet</option>
+              <option>No, plain is perfect</option>
               <option>A name on the ball</option>
               <option>A face or funny print on the bag</option>
-              <option>A gift box message</option>
-              <option>Show me all the options</option>
+              <option>A message on the gift box</option>
             </select>
+            <p class="hint">Personalising costs extra. We'll confirm the price before you pay.</p>
           </div>
-          <div class="hp" aria-hidden="true"><label for="n-website">Website</label><input type="text" id="n-website" name="website" tabindex="-1" autocomplete="off"></div>
-          <label class="check"><input type="checkbox" id="n-preorder" name="preorder" value="Yes"> I'd like to pre-order</label>
-          <button class="btn" type="submit">Notify me</button>
-          <p class="popia">We'll only use this to tell you when BliXem is ready. Unsubscribe anytime. <a href="privacy.html">Privacy</a></p>
+          <div class="hp" aria-hidden="true"><label for="r-website">Website</label><input type="text" id="r-website" name="website" tabindex="-1" autocomplete="off"></div>
+          <label class="check"><input type="checkbox" id="r-news" name="news" value="Yes"> Send me BliXem news now and then (optional)</label>
+          <button class="btn" type="submit">Reserve my BliXem</button>
+          <p class="popia">No card. No deposit. We'll only contact you about this reservation, unless you ticked news. <a href="privacy.html">Privacy</a></p>
+          <p class="wa-line"><a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20please%20reserve%20a%20BliXem%20for%20me.%20I%27m%20happy%20to%20pay%20when%20it%27s%20ready%20to%20ship." target="_blank" rel="noopener">Rather reserve on WhatsApp?</a></p>
         </form>
-        <div class="thanks" id="notify-thanks" hidden tabindex="-1">
-          <div class="big">Lekker, thank you!</div>
-          <p class="thanks-msg">You're on the list. We'll let you know as soon as BliXem is ready.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="corporate" id="bulk">
-    <div class="wrap">
-      <div class="section-head" id="golf-days">
-        <span class="label">Bulk and trade</span>
-        <h2>Golf days, pro shops and golf courses</h2>
-        <p>Buy in bulk and the price drops. Add your logo and make it the prize everyone talks about at the 19th.</p>
-      </div>
-      <div class="cards">
-        <div class="card">
-          <span class="label">Golf days</span>
-          <h3>Companies and charity days</h3>
-          <p>Hole prizes, goodie bags and a "worst shot of the day" prize people actually want.</p>
-        </div>
-        <div class="card">
-          <span class="label">Pro shops</span>
-          <h3>Stock it at the till</h3>
-          <p>The gift golfers buy on the way to the first tee. Trade pricing for resellers.</p>
-        </div>
-        <div class="card">
-          <span class="label">Hire carts</span>
-          <h3>One on every cart</h3>
-          <p>Fit a BliXem to your hire fleet, with your club's crest on the ball. It clamps on and comes off in seconds.</p>
-        </div>
-        <div class="card">
-          <span class="label">Estates and clubs</span>
-          <h3>Prizes and members</h3>
-          <p>Club competitions, league days and member gifts, in your club's colours.</p>
-        </div>
-      </div>
-
-      <div class="corp-grid">
-        <div class="price-card">
-          <h3>Bulk, trade and wholesale</h3>
-          <p>Every order gets its own written quote. The more bags you order, the less each one costs.</p>
-          <dl class="who-pays">
-            <div><dt>Golf days and companies</dt><dd>Bulk pricing from 10 bags, for hole prizes, VIP gifts and sponsors.</dd></div>
-            <div><dt>Pro shops and resellers</dt><dd>Trade pricing, with no minimum order.</dd></div>
-            <div><dt>Wholesale and distributors</dt><dd>Wholesale pricing from 100 bags.</dd></div>
-            <div><dt>Hire-cart fleets</dt><dd>One for every cart, with your club's crest on the ball.</dd></div>
-          </dl>
-          <ul>
-            <li><b>Logos, names and prints:</b> priced with your quote.</li>
-            <li><b>Need it for a date?</b> Tell us. Personalised orders take longer, so ask early.</li>
-          </ul>
-          <p class="fine">Retail price R999 incl VAT. Bulk, trade and wholesale prices are quoted ex VAT.</p>
-        </div>
-
-        <div class="form-card">
-          <form id="quote-form" novalidate>
-            <div class="row">
-              <div class="field">
-                <label class="label" for="q-name">Your name</label>
-                <input type="text" id="q-name" name="name" autocomplete="name" maxlength="120" required>
-                <div class="error" id="q-name-error" hidden>Please add your name.</div>
-              </div>
-              <div class="field">
-                <label class="label" for="q-company">Company or club</label>
-                <input type="text" id="q-company" name="company" autocomplete="organization" maxlength="160" required>
-                <div class="error" id="q-company-error" hidden>Please add your company or club.</div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="field">
-                <label class="label" for="q-email">Email</label>
-                <input type="email" id="q-email" name="email" autocomplete="email" inputmode="email" maxlength="200" required>
-                <div class="error" id="q-email-error" hidden>Please check your email address.</div>
-              </div>
-              <div class="field">
-                <label class="label" for="q-phone">Phone <span class="opt">(optional)</span></label>
-                <input type="tel" id="q-phone" name="phone" autocomplete="tel" inputmode="tel" maxlength="40">
-              </div>
-            </div>
-            <div class="field">
-              <label class="label" for="q-buyer">I'm buying for</label>
-              <select id="q-buyer" name="buyer" required>
-                <option value="">Choose one</option>
-                <option>A golf day or company gifts</option>
-                <option>A pro shop or shop (to resell)</option>
-                <option>Wholesale or distribution (100+)</option>
-                <option>Golf course hire carts</option>
-                <option>An estate or club (prizes, events)</option>
-                <option>Something else</option>
-              </select>
-              <div class="error" id="q-buyer-error" hidden>Please choose one.</div>
-            </div>
-            <div class="row">
-              <div class="field">
-                <label class="label" for="q-qty">How many bags</label>
-                <input type="number" id="q-qty" name="qty" min="1" max="100000" inputmode="numeric" placeholder="e.g. 40" required>
-                <div class="error" id="q-qty-error" hidden>Please add a number.</div>
-              </div>
-              <div class="field">
-                <label class="label" for="q-date">Date needed <span class="opt">(optional)</span></label>
-                <input type="date" id="q-date" name="date">
-              </div>
-            </div>
-            <fieldset class="checks">
-              <legend class="label">Personalise <span class="opt">(optional)</span></legend>
-              <label class="check"><input type="checkbox" name="custom" value="Logo on the ball"> Logo on the ball</label>
-              <label class="check"><input type="checkbox" name="custom" value="Names on the ball"> Names on the ball</label>
-              <label class="check"><input type="checkbox" name="custom" value="Face or funny print on the bag"> Face or funny print</label>
-              <label class="check"><input type="checkbox" name="custom" value="Gift box message"> Gift box message</label>
-            </fieldset>
-            <div class="field">
-              <label class="label" for="q-message">Anything else? <span class="opt">(optional)</span></label>
-              <textarea id="q-message" name="message" maxlength="2000" placeholder="e.g. Charity golf day, 18 March, 30 fourballs"></textarea>
-            </div>
-            <div class="hp" aria-hidden="true"><label for="q-website">Website</label><input type="text" id="q-website" name="website" tabindex="-1" autocomplete="off"></div>
-            <button class="btn" type="submit">Get a quote</button>
-            <p class="popia">We'll only use this to reply about your order. <a href="privacy.html">Privacy</a></p>
-          </form>
-          <div class="thanks" id="quote-thanks" hidden tabindex="-1">
-            <div class="big">Sharp, thank you!</div>
-            <p class="thanks-msg">We'll be in touch with a written quote.</p>
-          </div>
+        <div class="thanks" id="reserve-thanks" hidden tabindex="-1">
+          <div class="big">Lekker, <span data-first>golfer</span>. It's reserved.</div>
+          <p>Your reservation number is <span class="ref" data-ref>BX-0000</span>. Screenshot this, or send it to us on WhatsApp so it's in your chats.</p>
+          <a class="btn" data-wa-confirm href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.7 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Send my reservation to WhatsApp</a>
+          <h3>What happens next</h3>
+          <ol>
+            <li>We'll keep you posted. Our first batch is planned for before Father's Day, Sun 20 June 2027.</li>
+            <li>When yours is ready, we send a payment link to your WhatsApp and email: R1,499 incl VAT<span data-each hidden> for each BliXem</span>, plus delivery.</li>
+            <li>Pay within 7 days and we courier it to you. Changed your mind? Ignore the link or tell us. No hard feelings.</li>
+          </ol>
+          <a class="btn ghost-dark" data-share href="#" target="_blank" rel="noopener">Tell your fourball</a>
         </div>
       </div>
     </div>
@@ -564,41 +723,96 @@
       </div>
       <div class="faq">
         <details>
-          <summary>Will it fit my Club Car or E-Z-GO?</summary>
-          <p>We're choosing a clamp made for most cart roof posts (about 19–35 mm), and we're testing it on Club Car and E-Z-GO carts before launch.</p>
+          <summary>R1,499 for a punch ball?</summary>
+          <p>It's a full kit, not just a ball: a punch ball on a spring, an arm and a clamp made for golf-cart roof posts, plus a pump and a gift box. That's about the price of a dozen premium golf balls, and you won't lose this one in the dam. You pay nothing until yours is ready to ship.</p>
+        </details>
+        <details>
+          <summary>Will it fit my cart?</summary>
+          <p>It's made for the front roof post. The clamp is made for posts of about 19–35 mm, and we're testing it on Club Car and E-Z-GO carts before launch. Not sure about yours? WhatsApp us a photo of the post. If it doesn't fit when it arrives, send it back within 7 days for a refund.</p>
+        </details>
+        <details>
+          <summary>Will it scratch or damage the cart?</summary>
+          <p>It tightens by hand and comes off in seconds. We're testing it for marks on painted and powder-coated posts, and we'll tell you what we find before you pay.</p>
+        </details>
+        <details>
+          <summary>Is it allowed at my club? What about hire carts?</summary>
+          <p>On your own cart, it's your call. On a hire cart, ask the starter or pro shop first; some clubs have rules about fitting things to their carts. It clamps on by hand and comes off in seconds, so it goes home with you.</p>
         </details>
         <details>
           <summary>Is it safe?</summary>
-          <p>Only use BliXem when the cart is parked. Never while driving, and keep it clear of passengers getting in and out.</p>
+          <p>Only use BliXem when the cart is parked. Never while driving, and keep it clear of anyone getting in or out.</p>
         </details>
         <details>
-          <summary>Can I put a name, a face or my logo on it?</summary>
-          <p>Yes. Names and logos go on the ball, faces and funny designs are printed in full colour on the bag, and you can add a message on the gift box. Personalised BliXems are made to order. We only print someone's face with their OK.</p>
+          <summary>Is it built to last, or just a joke gift?</summary>
+          <p>The joke is the name. The kit is made to be hit every round, and we're testing samples for strength before we order. If anything is faulty, you have 6 months to send it back.</p>
+        </details>
+        <details>
+          <summary>What if they don't like it?</summary>
+          <p>Send it back within 7 days of delivery for a refund, as long as it isn't personalised. You only pay the courier to return it. Personalised BliXems are made just for you, so we can only take them back if they're faulty.</p>
+        </details>
+        <details>
+          <summary>When will I get it? Will it come before Father's Day?</summary>
+          <p>Our first batch is planned for before Father's Day, Sunday 20 June 2027. We'll keep you posted along the way. You only pay when yours is ready to ship, so if it can't reach you in time, you'll know before you've paid a cent.</p>
+        </details>
+        <details>
+          <summary>Why reserve? What's the catch?</summary>
+          <p>No catch. Reserving costs nothing and needs no card. It holds your place in the first batch and tells us how many to order. Reservations are filled in the order they come in. When yours is ready, we send a payment link. Don't want it anymore? Ignore the link or tell us.</p>
+        </details>
+        <details>
+          <summary>How do I pay?</summary>
+          <p>When your BliXem is ready, we send a secure payment link by WhatsApp and email. You can pay by card or instant EFT.</p>
+        </details>
+        <details>
+          <summary>What does delivery cost?</summary>
+          <p>Delivery is extra: from about R70 to a PUDO locker near you, or about R120 to your door, anywhere in South Africa. You'll see the exact cost before you pay.</p>
+        </details>
+        <details>
+          <summary>Can I put a name, a face or a logo on it? What does that cost?</summary>
+          <p>Yes. Names and logos go on the ball. Faces and funny designs go on the bag in full colour, and you can add a message on the gift box. Personalising costs extra; we confirm the price before you pay. We only print someone's face with their OK, and we can say no to anything hurtful or rude.</p>
+        </details>
+        <details>
+          <summary>Can I send it straight to the person it's for?</summary>
+          <p>Yes. Add their name and address when you pay, and we'll leave the price out of the box.</p>
+        </details>
+        <details>
+          <summary>Who are you?</summary>
+          <p>We're Dale and Pasqual. BliXem is a brand of Thriamvos (Pty) Ltd, a South African company. You can reach us on WhatsApp at 066 255 0508 or at hello@blixemgolf.co.za.</p>
         </details>
         <details>
           <summary>Do you do bulk or trade prices?</summary>
-          <p>Yes. Golf days and companies get bulk pricing from 10 bags, pro shops and resellers get trade pricing with no minimum, and wholesale pricing starts at 100 bags. Every order gets a written quote. <a href="#bulk">Ask for a quote</a>.</p>
-        </details>
-        <details>
-          <summary>Can a golf course fit one to every hire cart?</summary>
-          <p>Yes, that's what it's made for. It clamps on by hand and comes off in seconds. Ask us about fleet pricing and your club's crest on the ball.</p>
-        </details>
-        <details>
-          <summary>Do you deliver to my area?</summary>
-          <p>Yes. We deliver anywhere in South Africa.</p>
-        </details>
-        <details>
-          <summary>When can I get one?</summary>
-          <p>We're planning the first batch for before Father's Day 2027 (Sunday 20 June). Sign up above and we'll tell you as soon as you can order.</p>
-        </details>
-        <details>
-          <summary>How much is it?</summary>
-          <p>The launch price is R999. Signing up is free and you don't pay anything now.</p>
+          <p>Yes. Golf days and companies get bulk pricing from 10 bags, pro shops and resellers get trade pricing with no minimum, and wholesale pricing starts at 100 bags. <a href="golf-days.html">Ask for a quote</a>.</p>
         </details>
         <details>
           <summary>What does "BliXem" mean?</summary>
           <p>It's our take on the Afrikaans word for lightning. It's also what most golfers say after a bad shot.</p>
         </details>
+      </div>
+      <p class="faq-end"><a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%20have%20a%20question%20before%20I%20reserve." target="_blank" rel="noopener">Still unsure? WhatsApp us</a></p>
+    </div>
+  </section>
+
+  <section class="founders" id="about">
+    <div class="wrap">
+      <div class="founders-card">
+        <span class="label">Who's behind it</span>
+        <h2>Dale and Pasqual, the unlikely brothers</h2>
+        <p>We're two unlikely brothers who married twins. What we share most, apart from the in-laws, is a love of golf, and BliXem is for every round that doesn't go to plan.</p>
+        <p>BliXem is a brand of Thriamvos (Pty) Ltd, a South African company. Questions? <a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%20have%20a%20question%20about%20BliXem." target="_blank" rel="noopener">WhatsApp us on 066 255 0508</a> or email hello@blixemgolf.co.za.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="teaser" id="bulk">
+    <span id="golf-days"></span>
+    <div class="wrap teaser-grid">
+      <div>
+        <span class="label">Golf days, pro shops and hire carts</span>
+        <h2>Buying 10 or more?</h2>
+        <p>Bulk pricing for golf days and companies, trade pricing for pro shops and resellers, and your logo on the ball.</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="golf-days.html">Get a bulk quote</a>
+        <a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%27d%20like%20a%20bulk%20quote%20for%20BliXems." target="_blank" rel="noopener">Quicker on WhatsApp?</a>
       </div>
     </div>
   </section>
@@ -609,15 +823,23 @@
   <div class="wrap">
     <img src="badge-light.svg" class="badge" width="200" height="225" alt="BliXem" loading="lazy">
     <p class="label">19th Hole Boxing Co. · Est. 2027</p>
-    <p>Made for South African golfers.</p>
-    <p>hello@blixemgolf.co.za · <a href="privacy.html">Privacy</a></p>
+    <p>Made for South African golfers. BliXem is a brand of Thriamvos (Pty) Ltd.</p>
+    <p>hello@blixemgolf.co.za · <a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%20have%20a%20question%20about%20BliXem." target="_blank" rel="noopener">WhatsApp 066 255 0508</a> · <a href="golf-days.html">Golf days and trade</a> · <a href="privacy.html">Privacy</a></p>
     <p>&copy; <span id="year">2026</span> BliXem</p>
   </div>
 </footer>
 
+<a class="wa-float" href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%20have%20a%20question%20about%20BliXem." target="_blank" rel="noopener" aria-label="Chat to BliXem on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.7 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg><span>WhatsApp us</span></a>
+
+<div class="sticky" id="sticky">
+  <span class="sticky-price">R1,499</span>
+  <a class="btn" href="#reserve">Reserve free</a>
+  <a class="sticky-wa" href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%20have%20a%20question%20about%20BliXem." target="_blank" rel="noopener" aria-label="Chat to BliXem on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.7 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg></a>
+</div>
+
 <script>
   (function () {
-    // Both forms post to one Google Form ("BliXem sign-ups"), which saves each answer as a row
+    // The reserve form posts to the "BliXem sign-ups" Google Form, which saves each answer as a row
     // in the "BliXem sign-ups (Responses)" Google Sheet. Field IDs come from the published form.
     var GOOGLE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSc09Pw7dW6A4TMJtQwUVAFMTtNds9fybEeRw9x5WylNMjFFpw/formResponse';
     var FIELDS = {
@@ -625,19 +847,45 @@
       name: 'entry.86377772',
       email: 'entry.1394324245',
       phone: 'entry.694917502',
-      company: 'entry.1244578359',
-      buyer: 'entry.1996535585',
       qty: 'entry.857824002',
-      date: 'entry.1544832048',
-      preorder: 'entry.1232224607',
       personalise: 'entry.481361053',
-      message: 'entry.725478162'
+      ref: 'entry.2146147671',
+      whatfor: 'entry.47465449',
+      news: 'entry.1927100737',
+      source: 'entry.1056305271'
     };
+    var WA = 'https://wa.me/27662550508?text=';
+    var SHARE_URL = 'https://blixemgolf.co.za/?utm_source=whatsapp&utm_medium=share&utm_campaign=fourball';
     var CONTACT_EMAIL = 'hello@blixemgolf.co.za';
     var EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     var yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Where the visitor came from: campaign tags on the link, or the referring site. Never personal data.
+    function source() {
+      var params = new URLSearchParams(location.search);
+      var tags = ['utm_source', 'utm_medium', 'utm_campaign']
+        .map(function (key) { return params.get(key); })
+        .filter(Boolean);
+      if (tags.length) return tags.join(' / ').slice(0, 120);
+      try {
+        var host = document.referrer ? new URL(document.referrer).hostname : '';
+        if (host && host !== location.hostname) return host;
+      } catch (e) {}
+      return 'direct';
+    }
+
+    // Reservation number like BX-7KQ4, without look-alike characters (O/0, I/1).
+    function makeRef() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      var bytes = new Uint8Array(4);
+      if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(bytes);
+      else for (var i = 0; i < 4; i++) bytes[i] = Math.floor(Math.random() * 256);
+      var ref = 'BX-';
+      for (var j = 0; j < 4; j++) ref += chars[bytes[j] % chars.length];
+      return ref;
+    }
 
     function send(values) {
       var body = new URLSearchParams();
@@ -655,96 +903,85 @@
       return bad;
     }
 
-    function finish(form, thanksId, msg) {
-      var thanks = document.getElementById(thanksId);
-      if (msg) thanks.querySelector('.thanks-msg').textContent = msg;
+    var form = document.getElementById('reserve-form');
+    var thanks = document.getElementById('reserve-thanks');
+
+    function showThanks(first, ref, qty) {
+      thanks.querySelector('[data-first]').textContent = first;
+      thanks.querySelector('[data-ref]').textContent = ref;
+      thanks.querySelector('[data-each]').hidden = qty < 2;
+      thanks.querySelector('[data-wa-confirm]').href =
+        WA + encodeURIComponent('Hi BliXem, I’ve just reserved. My reservation number is ' + ref + '.');
+      thanks.querySelector('[data-share]').href = 'https://wa.me/?text=' + encodeURIComponent(
+        'Found this for after your next three-putt. A punch ball that clamps onto the golf cart. R1,499, and you pay nothing to reserve: ' + SHARE_URL);
       form.hidden = true;
       thanks.hidden = false;
       thanks.focus();
     }
 
-    function failed(form, button) {
+    function failed(button) {
       button.disabled = false;
       var p = form.querySelector('.send-error') || document.createElement('p');
       p.className = 'error send-error';
-      p.textContent = 'Sorry, that didn’t go through. Please try again, or email us at ' + CONTACT_EMAIL + '.';
+      p.textContent = 'Sorry, that didn’t go through. Please try again, or WhatsApp us on 066 255 0508 or email ' + CONTACT_EMAIL + '.';
       button.insertAdjacentElement('afterend', p);
     }
 
-    function wire(form, validate, collect, thanksId, thanksMsg) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var firstBad = validate(form);
-        if (firstBad) { firstBad.focus(); return; }
-        var button = form.querySelector('button[type=submit]');
-        // Bots fill the hidden "website" field; pretend it worked and send nothing.
-        if (form.website.value) { finish(form, thanksId, thanksMsg(form)); return; }
-        button.disabled = true;
-        send(collect(form))
-          .then(function () { finish(form, thanksId, thanksMsg(form)); })
-          .catch(function () { failed(form, button); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var qty = Number(form.qty.value);
+      var digits = form.phone.value.replace(/\D/g, '');
+      var bad = [
+        check(form.name, form.name.value.trim().length < 1) && form.name,
+        check(form.phone, digits.length < 9 || digits.length > 15) && form.phone,
+        check(form.email, !EMAIL_OK.test(form.email.value.trim())) && form.email,
+        check(form.qty, !(Number.isInteger(qty) && qty >= 1 && qty <= 10)) && form.qty
+      ].filter(Boolean);
+      if (bad.length) { bad[0].focus(); return; }
+
+      var first = form.name.value.trim().split(/\s+/)[0];
+      var ref = makeRef();
+      // Bots fill the hidden "website" field; pretend it worked and send nothing.
+      if (form.website.value) { showThanks(first, ref, qty); return; }
+
+      var button = form.querySelector('button[type=submit]');
+      button.disabled = true;
+      send({
+        type: 'Reserve',
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.phone.value.trim(),
+        qty: String(qty),
+        whatfor: form.whatfor.value,
+        personalise: form.personalise.value,
+        news: form.news.checked ? 'Yes' : '',
+        ref: ref,
+        source: source()
+      })
+        .then(function () { showThanks(first, ref, qty); })
+        .catch(function () { failed(button); });
+    });
+
+    // After jumping to the form, put the cursor in the first field.
+    document.querySelectorAll('a[href="#reserve"]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        setTimeout(function () {
+          if (!form.hidden) document.getElementById('r-name').focus({ preventScroll: true });
+        }, 450);
       });
+    });
+
+    // Phone sticky bar: shows once the hero button has scrolled away, hides while the form is on screen.
+    var bar = document.getElementById('sticky');
+    if ('IntersectionObserver' in window && bar) {
+      var heroVisible = true;
+      var formVisible = false;
+      var update = function () { bar.classList.toggle('show', !heroVisible && !formVisible); };
+      new IntersectionObserver(function (entries) { heroVisible = entries[0].isIntersecting; update(); })
+        .observe(document.getElementById('hero-reserve'));
+      new IntersectionObserver(function (entries) { formVisible = entries[0].isIntersecting; update(); })
+        .observe(document.getElementById('reserve'));
     }
-
-    function firstName(form) { return form.name.value.trim().split(/\s+/)[0]; }
-
-    wire(document.getElementById('notify-form'),
-      function (f) {
-        var bad = [
-          check(f.name, f.name.value.trim().length < 1) && f.name,
-          check(f.email, !EMAIL_OK.test(f.email.value.trim())) && f.email
-        ];
-        return bad.filter(Boolean)[0];
-      },
-      function (f) {
-        return {
-          type: 'Notify me',
-          name: f.name.value.trim(),
-          email: f.email.value.trim(),
-          phone: f.phone.value.trim(),
-          personalise: f.personalise.value,
-          preorder: f.preorder.checked ? 'Yes' : ''
-        };
-      },
-      'notify-thanks',
-      function (f) {
-        var msg = 'You’re on the list, ' + firstName(f) + '. We’ll let you know as soon as BliXem is ready.';
-        if (f.preorder.checked) msg += ' We’ve noted that you’d like to pre-order at the R999 launch price.';
-        return msg;
-      });
-
-    wire(document.getElementById('quote-form'),
-      function (f) {
-        var qty = parseInt(f.qty.value, 10);
-        var bad = [
-          check(f.name, f.name.value.trim().length < 1) && f.name,
-          check(f.company, f.company.value.trim().length < 1) && f.company,
-          check(f.email, !EMAIL_OK.test(f.email.value.trim())) && f.email,
-          check(f.buyer, !f.buyer.value) && f.buyer,
-          check(f.qty, !(qty >= 1)) && f.qty
-        ];
-        return bad.filter(Boolean)[0];
-      },
-      function (f) {
-        var custom = Array.prototype.slice.call(f.querySelectorAll('input[name=custom]:checked'))
-          .map(function (box) { return box.value; }).join(', ');
-        return {
-          type: 'Quote',
-          name: f.name.value.trim(),
-          company: f.company.value.trim(),
-          email: f.email.value.trim(),
-          phone: f.phone.value.trim(),
-          buyer: f.buyer.value,
-          qty: String(parseInt(f.qty.value, 10)),
-          date: f.date.value,
-          personalise: custom,
-          message: f.message.value.trim()
-        };
-      },
-      'quote-thanks',
-      function (f) {
-        return 'Thanks, ' + firstName(f) + '. We’ll be in touch about your ' + parseInt(f.qty.value, 10) + ' BliXems with a written quote.';
-      });
   })();
 </script>
 </body>
