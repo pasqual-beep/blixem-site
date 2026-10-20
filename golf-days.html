@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Golf days, pro shops and trade · BliXem</title>
-<meta name="description" content="BliXem for golf days, pro shops and golf courses: bulk pricing from 10 bags, trade pricing for resellers, wholesale from 100, and your logo on the ball. Get a written quote.">
+<meta name="description" content="Bulk BliXems for golf days, pro shops and golf courses: trade pricing, your logo on the bag, and a written quote for every order.">
 <link rel="canonical" href="https://blixemgolf.co.za/golf-days.html">
 <meta name="theme-color" content="#2c5a41">
 <meta property="og:type" content="website">
@@ -12,23 +12,24 @@
 <meta property="og:locale" content="en_ZA">
 <meta property="og:url" content="https://blixemgolf.co.za/golf-days.html">
 <meta property="og:title" content="BliXem for golf days, pro shops and golf courses">
-<meta property="og:description" content="Bulk pricing from 10 bags, trade pricing for pro shops, and your logo on the ball. Get a written quote.">
+<meta property="og:description" content="Bulk pricing from 10 bags, trade pricing for pro shops, and your logo on the bag. Get a written quote.">
 <meta property="og:image" content="https://blixemgolf.co.za/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Illustration of a BliXem punch ball clamped to a golf cart's roof post, with the words: Bad shot? Blix it.">
+<meta property="og:image:alt" content="Illustration of a BliXem boxing bag clamped to a golf cart's roof post, with the words: Bad shot? Blix it.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&family=Shrikhand&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/work-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <!--
   BliXem golf days, pro shops and trade page. The quote form posts to the same "BliXem sign-ups"
   Google Form as the home page, with Type = Quote. Form URL and field IDs are in the script at the bottom.
 -->
 <style>
+  @font-face { font-family: "Shrikhand"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/shrikhand-400-latin.woff2) format("woff2"); }
+  @font-face { font-family: "Josefin Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/josefin-sans-700-latin.woff2) format("woff2"); }
+  @font-face { font-family: "Work Sans"; font-style: normal; font-weight: 400 600; font-display: swap; src: url(fonts/work-sans-latin.woff2) format("woff2"); }
   :root {
     --fairway: #2c5a41;
     --deep: #1f4430;
@@ -78,17 +79,18 @@
   .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
   .topbar img { width: 46px; height: auto; display: block; }
   .topbar a { text-decoration: none; display: inline-flex; align-items: center; gap: 12px; }
-  .topbar .home { font-size: 0.75rem; color: var(--gold); }
+  .topbar .home { font-size: 0.75rem; color: #f2c35a; }
 
   /* Corporate */
   .corporate { background: var(--rust); color: var(--cream); padding-block: 56px 72px; }
-  .corporate h1, .corporate h3 { color: var(--cream); }
+  .corporate h1, .corporate h3, .corporate .card-title { color: var(--cream); }
+  .card-title { font-family: var(--body); font-weight: 600; font-size: 1.15rem; line-height: 1.3; margin: 0 0 6px; }
   .section-head { text-align: center; max-width: 680px; margin: 0 auto 40px; }
   .section-head .label { display: block; margin-bottom: 10px; }
   .section-head p { margin-top: 14px; }
   .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
   .card { border: 2px solid rgba(243,236,220,.45); border-radius: var(--radius); padding: 24px 20px; }
-  .card .label { color: var(--gold); font-size: 0.72rem; display: block; margin-bottom: 8px; }
+  .card .label { color: #fbe3a6; font-size: 0.72rem; display: block; margin-bottom: 8px; }
   .card p { margin: 0; font-size: 0.98rem; }
   .corp-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; margin-top: 44px; }
   .price-card { background: var(--cream); color: var(--ink); border-radius: 18px; padding: 28px 26px; }
@@ -107,7 +109,7 @@
   .form-card { background: var(--paper); color: var(--ink); border: 2px solid var(--cream-2); border-radius: 18px; padding: 30px 26px; box-shadow: 0 10px 0 var(--fairway); }
   .field { margin-bottom: 16px; }
   .field > label { display: block; margin-bottom: 6px; color: var(--deep); font-size: 0.75rem; }
-  .field .opt { color: #6b6b5e; letter-spacing: 0.08em; text-transform: none; font-family: var(--body); font-weight: 500; font-size: 0.85rem; }
+  .field .opt, .checks .opt { color: #6b6b5e; letter-spacing: 0.08em; text-transform: none; font-family: var(--body); font-weight: 500; font-size: 0.85rem; line-height: 1; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
   input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date], select, textarea {
     width: 100%; font: inherit; font-size: 1rem; color: var(--ink); background: #fff; border: 2px solid #cfc4aa; border-radius: 10px; padding: 12px 14px;
@@ -120,6 +122,8 @@
   [aria-invalid=true] { border-color: var(--orange) !important; }
   .check { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0; font-weight: 500; cursor: pointer; font-size: 0.97rem; }
   .check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--orange); flex: none; }
+  .check input:focus-visible { outline: 3px solid var(--deep); outline-offset: 2px; }
+  input[type=date] { min-height: 54px; padding-block: 10px; }
   .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; border: 0; padding: 0; margin: 0 0 16px; }
   .checks legend { padding: 0; margin-bottom: 8px; color: var(--deep); font-size: 0.75rem; }
   .error { color: var(--orange-dark); font-size: 0.9rem; margin-top: 6px; }
@@ -145,6 +149,10 @@
   @media (max-width: 900px) {
     .cards { grid-template-columns: repeat(2, 1fr); }
     .corp-grid { grid-template-columns: 1fr; gap: 28px; }
+  }
+  @media (max-width: 720px) {
+    .wa-float { padding: 12px; }
+    .wa-float span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   }
   @media (max-width: 520px) {
     .wrap { padding-inline: 16px; }
@@ -173,22 +181,22 @@
       <div class="cards">
         <div class="card">
           <span class="label">Golf days</span>
-          <h3>Companies and charity days</h3>
+          <h2 class="card-title">Companies and charity days</h2>
           <p>Hole prizes, VIP gifts and a "worst shot of the day" prize people actually want.</p>
         </div>
         <div class="card">
           <span class="label">Pro shops</span>
-          <h3>Stock it at the till</h3>
+          <h2 class="card-title">Stock it at the till</h2>
           <p>The gift golfers buy on the way to the first tee. Trade pricing for resellers.</p>
         </div>
         <div class="card">
           <span class="label">Hire carts</span>
-          <h3>One on every cart</h3>
-          <p>Fit a BliXem to your hire fleet, with your club's crest on the ball. It clamps on and comes off in seconds.</p>
+          <h2 class="card-title">One on every cart</h2>
+          <p>Fit a BliXem to your hire fleet, with your club's crest on the bag. It clamps on and comes off in seconds.</p>
         </div>
         <div class="card">
           <span class="label">Estates and clubs</span>
-          <h3>Prizes and members</h3>
+          <h2 class="card-title">Prizes and members</h2>
           <p>Club competitions, league days and member gifts, in your club's colours.</p>
         </div>
       </div>
@@ -201,7 +209,7 @@
             <div><dt>Golf days and companies</dt><dd>Bulk pricing from 10 bags, for hole prizes, VIP gifts and sponsors.</dd></div>
             <div><dt>Pro shops and resellers</dt><dd>Trade pricing, with no minimum order.</dd></div>
             <div><dt>Wholesale and distributors</dt><dd>Wholesale pricing from 100 bags.</dd></div>
-            <div><dt>Hire-cart fleets</dt><dd>One for every cart, with your club's crest on the ball.</dd></div>
+            <div><dt>Hire-cart fleets</dt><dd>One for every cart, with your club's crest on the bag.</dd></div>
           </dl>
           <ul>
             <li><b>Logos, names and prints:</b> priced with your quote.</li>
@@ -216,19 +224,19 @@
             <div class="row">
               <div class="field">
                 <label class="label" for="q-name">Your name</label>
-                <input type="text" id="q-name" name="name" autocomplete="name" maxlength="120" required>
+                <input type="text" id="q-name" name="name" autocomplete="name" maxlength="120" required aria-describedby="q-name-error">
                 <div class="error" id="q-name-error" hidden>Please add your name.</div>
               </div>
               <div class="field">
                 <label class="label" for="q-company">Company or club</label>
-                <input type="text" id="q-company" name="company" autocomplete="organization" maxlength="160" required>
+                <input type="text" id="q-company" name="company" autocomplete="organization" maxlength="160" required aria-describedby="q-company-error">
                 <div class="error" id="q-company-error" hidden>Please add your company or club.</div>
               </div>
             </div>
             <div class="row">
               <div class="field">
                 <label class="label" for="q-email">Email</label>
-                <input type="email" id="q-email" name="email" autocomplete="email" inputmode="email" maxlength="200" required>
+                <input type="email" id="q-email" name="email" autocomplete="email" inputmode="email" maxlength="200" required aria-describedby="q-email-error">
                 <div class="error" id="q-email-error" hidden>Please check your email address.</div>
               </div>
               <div class="field">
@@ -238,7 +246,7 @@
             </div>
             <div class="field">
               <label class="label" for="q-buyer">I'm buying for</label>
-              <select id="q-buyer" name="buyer" required>
+              <select id="q-buyer" name="buyer" required aria-describedby="q-buyer-error">
                 <option value="">Choose one</option>
                 <option>A golf day or company gifts</option>
                 <option>A pro shop or shop (to resell)</option>
@@ -252,8 +260,8 @@
             <div class="row">
               <div class="field">
                 <label class="label" for="q-qty">How many bags</label>
-                <input type="number" id="q-qty" name="qty" min="1" max="100000" inputmode="numeric" placeholder="e.g. 40" required>
-                <div class="error" id="q-qty-error" hidden>Please add a number.</div>
+                <input type="number" id="q-qty" name="qty" min="1" max="100000" inputmode="numeric" placeholder="e.g. 40" required aria-describedby="q-qty-error">
+                <div class="error" id="q-qty-error" hidden>Please add a whole number from 1 to 100,000.</div>
               </div>
               <div class="field">
                 <label class="label" for="q-date">Date needed <span class="opt">(optional)</span></label>
@@ -262,16 +270,15 @@
             </div>
             <fieldset class="checks">
               <legend class="label">Personalise <span class="opt">(optional)</span></legend>
-              <label class="check"><input type="checkbox" name="custom" value="Logo on the ball"> Logo on the ball</label>
-              <label class="check"><input type="checkbox" name="custom" value="Names on the ball"> Names on the ball</label>
-              <label class="check"><input type="checkbox" name="custom" value="Face or funny print on the bag"> Face or funny print</label>
-              <label class="check"><input type="checkbox" name="custom" value="Gift box message"> Gift box message</label>
+              <label class="check"><input type="checkbox" name="custom" value="Logo on the bag"> Logo on the bag</label>
+              <label class="check"><input type="checkbox" name="custom" value="Names on the bag"> Names on the bag</label>
+              <label class="check"><input type="checkbox" name="custom" value="Face or design on the bag"> Face or design</label>
             </fieldset>
             <div class="field">
               <label class="label" for="q-message">Anything else? <span class="opt">(optional)</span></label>
               <textarea id="q-message" name="message" maxlength="2000" placeholder="e.g. Charity golf day, 18 March, 30 fourballs"></textarea>
             </div>
-            <div class="hp" aria-hidden="true"><label for="q-website">Website</label><input type="text" id="q-website" name="website" tabindex="-1" autocomplete="off"></div>
+            <div class="hp" aria-hidden="true"><label for="q-trap">Leave this empty</label><input type="text" id="q-trap" name="bx_trap" tabindex="-1" autocomplete="off"></div>
             <button class="btn" type="submit">Get a quote</button>
             <p class="popia">We'll only use this to reply about your order. <a href="privacy.html">Privacy</a></p>
           </form>
@@ -289,12 +296,14 @@
 <footer>
   <div class="wrap">
     <p>BliXem is a brand of Thriamvos (Pty) Ltd, a South African company.</p>
-    <p>hello@blixemgolf.co.za · <a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%27d%20like%20a%20bulk%20quote%20for%20BliXems." target="_blank" rel="noopener">WhatsApp 066 255 0508</a> · <a href="./">BliXem home</a> · <a href="privacy.html">Privacy</a></p>
+    <p><a href="mailto:hello@blixemgolf.co.za">hello@blixemgolf.co.za</a> · <a href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%27d%20like%20a%20bulk%20quote%20for%20BliXems." target="_blank" rel="noopener">WhatsApp 066 255 0508</a> · <a href="./">BliXem home</a> · <a href="privacy.html">Privacy</a></p>
     <p>&copy; <span id="year">2026</span> BliXem</p>
   </div>
 </footer>
 
-<a class="wa-float" href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%27d%20like%20a%20bulk%20quote%20for%20BliXems." target="_blank" rel="noopener" aria-label="Chat to BliXem on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.7 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg><span>WhatsApp us</span></a>
+<aside aria-label="Quick contact">
+<a class="wa-float" href="https://wa.me/27662550508?text=Hi%20BliXem%2C%20I%27d%20like%20a%20bulk%20quote%20for%20BliXems." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.2-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-2-1.2 7.4 7.4 0 0 1-1.4-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.7 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg><span>WhatsApp us</span></a>
+</aside>
 
 <script>
   (function () {
@@ -362,20 +371,20 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var qty = parseInt(form.qty.value, 10);
+      var qty = Number(form.qty.value);
       var bad = [
         check(form.name, form.name.value.trim().length < 1) && form.name,
         check(form.company, form.company.value.trim().length < 1) && form.company,
         check(form.email, !EMAIL_OK.test(form.email.value.trim())) && form.email,
         check(form.buyer, !form.buyer.value) && form.buyer,
-        check(form.qty, !(qty >= 1)) && form.qty
+        check(form.qty, !(Number.isInteger(qty) && qty >= 1 && qty <= 100000)) && form.qty
       ].filter(Boolean);
       if (bad.length) { bad[0].focus(); return; }
 
       var first = form.name.value.trim().split(/\s+/)[0];
-      var msg = 'Thanks, ' + first + '. We’ll be in touch about your ' + qty + ' BliXems with a written quote.';
-      // Bots fill the hidden "website" field; pretend it worked and send nothing.
-      if (form.website.value) { finish(msg); return; }
+      var msg = 'Thanks, ' + first + '. We’ll be in touch about your ' + qty + (qty === 1 ? ' BliXem' : ' BliXems') + ' with a written quote.';
+      // Bots fill the hidden trap field; pretend it worked and send nothing.
+      if (form.bx_trap.value) { finish(msg); return; }
 
       var custom = Array.prototype.slice.call(form.querySelectorAll('input[name=custom]:checked'))
         .map(function (box) { return box.value; }).join(', ');
@@ -399,7 +408,8 @@
           button.disabled = false;
           var p = form.querySelector('.send-error') || document.createElement('p');
           p.className = 'error send-error';
-          p.textContent = 'Sorry, that didn’t go through. Please try again, or WhatsApp us on 066 255 0508 or email ' + CONTACT_EMAIL + '.';
+          p.setAttribute('role', 'alert');
+          p.innerHTML = 'Sorry, that didn’t go through. Please try again, or <a href="https://wa.me/27662550508">WhatsApp us on 066 255 0508</a> or email <a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>.';
           button.insertAdjacentElement('afterend', p);
         });
     });
